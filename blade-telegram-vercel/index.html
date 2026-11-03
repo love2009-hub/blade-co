@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BLADE & CO. — Барбершоп</title>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/trv7tzzp/image/upload/f_auto,q_auto/blade_co_logo_square" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-void-black: #000000;
+    --color-graphite-hairline: #292d30;
+    --color-white: #ffffff;
+    --color-bone-white: #f0f0f0;
+    --color-ash-gray: #a1a4a5;
+    --color-smoke-gray: #abafb4;
+    --color-iron: #6e727a;
+    --color-charcoal: #464a4d;
+    --color-iris-violet: #9281f7;
+    --color-iris-violet-glow: #baa7ff;
+    --color-signal-blue: #3b9eff;
+    --color-pulse-green: #3ad389;
+    --font-inter: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Playfair Display', ui-serif, Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--color-void-black);
+    color: var(--color-bone-white);
+    font-family: var(--font-inter);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body.menu-open { overflow: hidden; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============ PAGE SWITCHING ============ */
+  .page { display: none; }
+  .page.active { display: block; animation: pageFade 400ms ease-out; }
+  @keyframes pageFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid var(--color-graphite-hairline);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 16px;
+  }
+  .nav-left { display: flex; align-items: center; gap: 16px; }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--color-white);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 150ms ease-out;
+  }
+  .logo:hover { opacity: 0.75; }
+  .logo-dot {
+    width: 6px; height: 6px;
+    background: var(--color-iris-violet);
+    border-radius: 50%;
+  }
+
+  /* ============ HAMBURGER ============ */
+  .hamburger {
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0;
+    transition: border-color 150ms ease-out;
+  }
+  .hamburger:hover { border-color: var(--color-white); }
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--color-white);
+    transition: all 250ms ease-out;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ============ SIDEBAR MENU ============ */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 250ms ease-out;
+  }
+  .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: 340px;
+    max-width: 85vw;
+    background: var(--color-void-black);
+    border-right: 1px solid var(--color-graphite-hairline);
+    z-index: 70;
+    transform: translateX(-100%);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    margin-bottom: 32px;
+  }
+  .sidebar-close {
+    width: 32px; height: 32px;
+    background: transparent;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 6px;
+    color: var(--color-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: border-color 150ms ease-out;
+  }
+  .sidebar-close:hover { border-color: var(--color-white); }
+  .sidebar-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sidebar-nav a,
+  .sidebar-nav button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 12px;
+    color: var(--color-bone-white);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: var(--font-inter);
+    border-radius: 6px;
+    transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+  }
+  .sidebar-nav a:hover,
+  .sidebar-nav button:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--color-graphite-hairline);
+    color: var(--color-white);
+  }
+  .sidebar-nav .chev {
+    color: var(--color-ash-gray);
+    transition: transform 150ms ease-out, color 150ms ease-out;
+  }
+  .sidebar-nav a:hover .chev,
+  .sidebar-nav button:hover .chev {
+    color: var(--color-iris-violet);
+    transform: translateX(3px);
+  }
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-graphite-hairline);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .sidebar-footer .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .sidebar-footer .dot {
+    width: 6px; height: 6px;
+    background: var(--color-pulse-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-pulse-green);
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-family: var(--font-inter);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+    border: 1px solid var(--color-graphite-hairline);
+    background: transparent;
+    color: var(--color-white);
+  }
+  .btn:hover { border-color: var(--color-white); }
+  .btn-primary {
+    background: var(--color-white);
+    color: var(--color-void-black);
+    border-color: var(--color-white);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--color-white);
+  }
+  .btn .chev { transition: transform 150ms ease-out; }
+  .btn:hover .chev { transform: translateX(3px); }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 96px 0 120px;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 9999px;
+    font-size: 13px;
+    color: var(--color-bone-white);
+    margin-bottom: 32px;
+    font-family: var(--font-mono);
+  }
+  .hero-pill .dot {
+    width: 6px; height: 6px;
+    background: var(--color-pulse-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-pulse-green);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--color-white);
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--color-iris-violet);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--color-ash-gray);
+    max-width: 480px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(146, 129, 247, 0.12), transparent 60%),
+      #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    perspective: 1000px;
+  }
+  .hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-graphite-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-graphite-hairline) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.25;
+  }
+  .scissors-wrap {
+    width: 78%;
+    aspect-ratio: 1;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: scissorsSpin 18s linear infinite;
+  }
+  @keyframes scissorsSpin {
+    from { transform: rotateY(0deg) rotateX(12deg); }
+    to   { transform: rotateY(360deg) rotateX(12deg); }
+  }
+  .scissors-orient {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 50px rgba(146, 129, 247, 0.28));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scissors-orient img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .hero-visual .tag {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    z-index: 2;
+  }
+  .hero-visual .tag span { color: var(--color-ash-gray); }
+
+  /* ============ SECTIONS ============ */
+  section { padding: 96px 0; border-bottom: 1px solid var(--color-graphite-hairline); }
+  .section-head { margin-bottom: 56px; max-width: 720px; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--color-iris-violet);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-white);
+    margin-bottom: 20px;
+  }
+  .section-desc {
+    font-size: 17px;
+    color: var(--color-ash-gray);
+    line-height: 1.6;
+  }
+
+  /* ============ SERVICES ============ */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .service-card {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 32px;
+    transition: border-color 150ms ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card:hover { border-color: var(--color-iris-violet); }
+  .service-card:hover .service-icon {
+    background: rgba(146, 129, 247, 0.08);
+    border-color: var(--color-iris-violet);
+  }
+  .service-card:hover .service-icon svg { stroke: var(--color-iris-violet); }
+  .service-icon {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    border: 1px solid var(--color-graphite-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    transition: all 150ms ease-out;
+  }
+  .service-icon svg {
+    width: 28px; height: 28px;
+    stroke: var(--color-bone-white);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 150ms ease-out;
+  }
+  .service-card h3 {
+    font-family: var(--font-inter);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-white);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .service-card p {
+    font-size: 14px;
+    color: var(--color-ash-gray);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .service-list {
+    list-style: none;
+    border-top: 1px solid var(--color-graphite-hairline);
+    padding-top: 20px;
+  }
+  .service-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(41, 45, 48, 0.5);
+  }
+  .service-list li:last-child { border-bottom: none; }
+  .service-list .name { color: var(--color-bone-white); }
+  .service-list .price {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-iris-violet);
+  }
+
+  /* ============ PROCESS ============ */
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    counter-reset: step;
+  }
+  .process-step {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    counter-increment: step;
+  }
+  .process-step::before {
+    content: "0" counter(step);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-iris-violet);
+    display: block;
+    margin-bottom: 24px;
+  }
+  .process-step h4 {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--color-white);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .process-step p {
+    font-size: 14px;
+    color: var(--color-ash-gray);
+    line-height: 1.6;
+  }
+
+  /* ============ CONTACT ============ */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 16px;
+  }
+  .contact-info {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .contact-info h3 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--color-white);
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .contact-info > p {
+    color: var(--color-ash-gray);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .contact-list { list-style: none; }
+  .contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0;
+    border-top: 1px solid var(--color-graphite-hairline);
+  }
+  .contact-list li:last-child { border-bottom: 1px solid var(--color-graphite-hairline); }
+  .contact-list .ic {
+    width: 36px; height: 36px;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-list .ic svg {
+    width: 16px; height: 16px;
+    stroke: var(--color-iris-violet);
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .contact-list .lbl {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .contact-list .val {
+    color: var(--color-white);
+    font-size: 15px;
+  }
+  .contact-list a {
+    color: var(--color-white);
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+  .contact-list a:hover { color: var(--color-iris-violet); }
+
+  .contact-form {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .contact-form h3 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--color-white);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .contact-form > p {
+    color: var(--color-ash-gray);
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 6px;
+    padding: 12px 14px;
+    color: var(--color-white);
+    font-family: var(--font-inter);
+    font-size: 14px;
+    transition: border-color 150ms ease-out;
+    outline: none;
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: var(--color-iris-violet); }
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--color-smoke-gray); }
+  .form-submit {
+    margin-top: 20px;
+    width: 100%;
+    justify-content: center;
+  }
+  .form-note {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-align: center;
+  }
+  .form-note span { color: var(--color-iris-violet); }
+  .form-status {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    display: none;
+    border: 1px solid var(--color-graphite-hairline);
+  }
+  .form-status.success {
+    display: block;
+    color: var(--color-pulse-green);
+    border-color: var(--color-pulse-green);
+    background: rgba(58, 211, 137, 0.05);
+  }
+  .form-status.error {
+    display: block;
+    color: #ff9592;
+    border-color: #ff9592;
+    background: rgba(255, 149, 146, 0.05);
+  }
+
+  /* ============ VPN NOTICE ============ */
+  .vpn-notice {
+    background: rgba(146, 129, 247, 0.04);
+    border-left: 2px solid var(--color-iris-violet);
+    padding: 14px 18px;
+    margin-top: 20px;
+    margin-bottom: 4px;
+    border-radius: 0 6px 6px 0;
+  }
+  .vpn-notice-text {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-ash-gray);
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
+  .vpn-notice-text .prompt {
+    color: var(--color-iris-violet);
+    margin-right: 6px;
+    opacity: 0.85;
+  }
+  .vpn-notice-text .vpn-highlight {
+    color: var(--color-iris-violet);
+    font-weight: 500;
+  }
+
+  /* ============ PHILOSOPHY PAGE ============ */
+  .philosophy-hero {
+    padding: 80px 0 96px;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    position: relative;
+    overflow: hidden;
+  }
+  .philosophy-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-graphite-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-graphite-hairline) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .philosophy-hero .container { position: relative; z-index: 1; }
+  .philosophy-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-white);
+    margin-bottom: 24px;
+    max-width: 900px;
+  }
+  .philosophy-hero h1 em {
+    font-style: italic;
+    color: var(--color-iris-violet);
+  }
+  .philosophy-hero .lede {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2vw, 22px);
+    font-style: italic;
+    color: var(--color-ash-gray);
+    max-width: 640px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .manifesto {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+  }
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 64px;
+  }
+  .manifesto-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: sticky;
+    top: 96px;
+    align-self: start;
+  }
+  .manifesto-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .manifesto-item {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--color-graphite-hairline);
+    align-items: start;
+  }
+  .manifesto-item:last-child { border-bottom: 1px solid var(--color-graphite-hairline); }
+  .manifesto-item .num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    padding-top: 4px;
+  }
+  .manifesto-item h3 {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 400;
+    color: var(--color-white);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .manifesto-item h3 em {
+    font-style: italic;
+    color: var(--color-iris-violet);
+  }
+  .manifesto-item p {
+    font-size: 15px;
+    color: var(--color-ash-gray);
+    line-height: 1.55;
+    max-width: 560px;
+  }
+
+  .principles {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+  }
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .principle {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 150ms ease-out;
+    position: relative;
+  }
+  .principle:hover { border-color: var(--color-iris-violet); }
+  .principle:hover .principle-icon {
+    background: rgba(146, 129, 247, 0.08);
+    border-color: var(--color-iris-violet);
+  }
+  .principle:hover .principle-icon svg { stroke: var(--color-iris-violet); }
+  .principle-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--color-graphite-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: all 150ms ease-out;
+  }
+  .principle-icon svg {
+    width: 20px; height: 20px;
+    stroke: var(--color-bone-white);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 150ms ease-out;
+  }
+  .principle .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-iris-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .principle h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--color-white);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .principle p {
+    font-size: 13px;
+    color: var(--color-ash-gray);
+    line-height: 1.55;
+  }
+
+  .creed {
+    padding: 96px 0;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    text-align: center;
+  }
+  .creed-quote {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-white);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    max-width: 800px;
+    margin: 0 auto 24px;
+  }
+  .creed-quote em {
+    color: var(--color-iris-violet);
+    font-style: italic;
+  }
+  .creed-author {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .creed-author span { color: var(--color-iris-violet); }
+  .creed-mark {
+    font-family: var(--font-display);
+    font-size: 100px;
+    color: var(--color-iris-violet);
+    line-height: 1;
+    opacity: 0.4;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .creed-cta {
+    padding: 64px 0;
+    text-align: center;
+  }
+  .creed-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 400;
+    color: var(--color-white);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .creed-cta p {
+    color: var(--color-ash-gray);
+    margin-bottom: 28px;
+    font-size: 16px;
+  }
+
+  /* ============ FOOTER ============ */
+  footer { padding: 32px 0; }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ash-gray);
+  }
+  .footer-inner a {
+    color: var(--color-ash-gray);
+    text-decoration: none;
+    margin-left: 20px;
+    transition: color 150ms ease-out;
+  }
+  .footer-inner a:hover { color: var(--color-white); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-visual { max-width: 400px; margin: 0 auto; width: 100%; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-grid { grid-template-columns: 1fr; }
+    .manifesto-grid { grid-template-columns: 1fr; gap: 32px; }
+    .manifesto-label { position: static; }
+    .principles-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .container { padding: 0 16px; }
+    section, .manifesto, .principles { padding: 64px 0; }
+    .hero, .philosophy-hero { padding: 56px 0 72px; }
+    .hero h1 { font-size: 44px; }
+    .section-title { font-size: 32px; }
+    .process-grid { grid-template-columns: 1fr; }
+    .principles-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .contact-info, .contact-form { padding: 28px 20px; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    .footer-inner div:last-child { margin-left: 0; }
+    .footer-inner a { margin: 0 10px; }
+    .nav-cta-desktop { display: none; }
+    .manifesto-item { grid-template-columns: 1fr; gap: 10px; }
+    .creed { padding: 72px 0; }
+    .creed-mark { font-size: 72px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-left">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="logo" data-nav="home">
+        <span class="logo-dot"></span>
+        BLADE &amp; CO.
+      </a>
+    </div>
+    <a href="#contact" class="btn nav-cta-desktop" data-nav="home" data-scroll="contact">Записаться <span class="chev">→</span></a>
+  </div>
+</nav>
+
+<!-- SIDEBAR MENU -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-hidden="true">
+  <div class="sidebar-head">
+    <div class="logo">
+      <span class="logo-dot"></span>
+      BLADE &amp; CO.
+    </div>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">×</button>
+  </div>
+  <ul class="sidebar-nav">
+    <li><button data-nav="home" data-scroll="services">Услуги <span class="chev">→</span></button></li>
+    <li><button data-nav="home" data-scroll="process">Как мы работаем <span class="chev">→</span></button></li>
+    <li><button data-nav="home" data-scroll="contact">Контакты <span class="chev">→</span></button></li>
+    <li><button data-nav="philosophy">Философия барбершопа <span class="chev">→</span></button></li>
+  </ul>
+  <div class="sidebar-footer">
+    <div class="status"><span class="dot"></span> Открыто сейчас</div>
+    <div>Пн–Вс · 10:00 — 22:00</div>
+  </div>
+</aside>
+
+<!-- ============ MAIN PAGE ============ -->
+<main class="page active" id="page-home">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-pill">
+          <span class="dot"></span>
+          <span>открыто сегодня · 10:00 — 22:00</span>
+        </div>
+        <h1>Мужская эстетика.<br><em>Чёткие линии.</em><br>Классика бритвы.</h1>
+        <p class="hero-sub">Барбершоп полного цикла: стрижки, оформление бороды, королевское бритьё опасной бритвой и уход за кожей лица. Без компромиссов.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary">Записаться <span class="chev">→</span></a>
+          <a href="#services" class="btn">Смотреть услуги</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="scissors-wrap">
+          <div class="scissors-orient">
+            <img src="https://res.cloudinary.com/trv7tzzp/image/upload/f_auto,q_auto/d83f9ee3-d3d1-4e38-9b58-ba9c81aa9091-Photoroom" alt="Ножницы BLADE &amp; CO." draggable="false" />
+          </div>
+        </div>
+        <div class="tag">blade.co <span>/ est. 2019</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Что я делаю</div>
+        <h2 class="section-title">Полный комплекс<br>мужского ухода</h2>
+        <p class="section-desc">Три направления — волосы, борода и кожа лица. Каждая услуга построена на классических техниках и внимании к деталям.</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="6" cy="6" r="3"/>
+              <circle cx="6" cy="18" r="3"/>
+              <path d="M 8.12 8.12 L 20 20"/>
+              <path d="M 15.89 8.11 L 8.12 15.88"/>
+              <path d="M 18 4 L 8.12 13.88"/>
+            </svg>
+          </div>
+          <h3>Стрижки</h3>
+          <p>Классические и современные мужские стрижки. Работа ножницами и машинкой, точная геометрия линий.</p>
+          <ul class="service-list">
+            <li><span class="name">Классическая стрижка</span><span class="price">1 800 ₽</span></li>
+            <li><span class="name">Модельная стрижка</span><span class="price">2 400 ₽</span></li>
+            <li><span class="name">Стрижка + укладка</span><span class="price">2 900 ₽</span></li>
+            <li><span class="name">Детская (до 12 лет)</span><span class="price">1 400 ₽</span></li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 4 10 C 4 10 6 8 8 9 C 9 9.5 10 10 12 10 C 14 10 15 9.5 16 9 C 18 8 20 10 20 10"/>
+              <path d="M 5 12 C 5 16 7 20 12 21 C 17 20 19 16 19 12"/>
+              <path d="M 9 14 C 9.5 15 10.5 15 12 15 C 13.5 15 14.5 15 15 14"/>
+              <path d="M 10 17 C 10.5 18 11.5 18 12 18 C 12.5 18 13.5 18 14 17"/>
+            </svg>
+          </div>
+          <h3>Борода</h3>
+          <p>Оформление, моделирование и уход. Подчёркиваем естественную линию, работаем с любой длиной и типом волоса.</p>
+          <ul class="service-list">
+            <li><span class="name">Моделирование бороды</span><span class="price">1 200 ₽</span></li>
+            <li><span class="name">Стрижка + борода</span><span class="price">2 800 ₽</span></li>
+            <li><span class="name">Коррекция контура</span><span class="price">800 ₽</span></li>
+            <li><span class="name">Окрашивание бороды</span><span class="price">1 600 ₽</span></li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 3 14 L 10 14 L 10 18 L 3 18 Z"/>
+              <path d="M 10 16 L 21 10 L 21 14 L 10 18 Z"/>
+              <circle cx="10" cy="16" r="1" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="14.5" x2="19" y2="11" stroke-width="0.8"/>
+            </svg>
+          </div>
+          <h3>Бритьё и уход</h3>
+          <p>Королевское бритьё опасной бритвой, горячие полотенца, уход за кожей лица. Ритуал, а не процедура.</p>
+          <ul class="service-list">
+            <li><span class="name">Классическое бритьё</span><span class="price">1 800 ₽</span></li>
+            <li><span class="name">Бритьё + уход за лицом</span><span class="price">2 400 ₽</span></li>
+            <li><span class="name">Чёрная маска для лица</span><span class="price">700 ₽</span></li>
+            <li><span class="name">Комплекс «Всё включено»</span><span class="price">4 500 ₽</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Как мы работаем</div>
+        <h2 class="section-title">Четыре шага<br>до результата</h2>
+        <p class="section-desc">Прозрачный процесс — от записи до выхода из кресла. Никакой суеты, только точность и внимание.</p>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step">
+          <h4>Запись</h4>
+          <p>Оставьте заявку на сайте или позвоните. Подберём удобное время и мастера под вашу задачу.</p>
+        </div>
+        <div class="process-step">
+          <h4>Консультация</h4>
+          <p>Обсуждаем форму, длину и стиль. Барбер предлагает варианты с учётом формы лица и структуры волос.</p>
+        </div>
+        <div class="process-step">
+          <h4>Работа</h4>
+          <p>Классические техники, острые инструменты, проверенная косметика. Без спешки и компромиссов.</p>
+        </div>
+        <div class="process-step">
+          <h4>Результат</h4>
+          <p>Финальная укладка, рекомендации по домашнему уходу и чашка кофе — в подарок к визиту.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Контакты</div>
+        <h2 class="section-title">Записаться<br>на стрижку</h2>
+        <p class="section-desc">Заполните форму — мы перезвоним в течение 15 минут и подтвердим запись.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Найдите нас</h3>
+          <p>Уютное пространство в центре города. Работаем без выходных.</p>
+          <ul class="contact-list">
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+              <div>
+                <div class="lbl">Адрес</div>
+                <div class="val">ул. Тверская, 12, 2 этаж</div>
+              </div>
+            </li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div>
+                <div class="lbl">Телефон</div>
+                <div class="val"><a href="tel:+74951234567">+7 (495) 123-45-67</a></div>
+              </div>
+            </li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+              <div>
+                <div class="lbl">Часы работы</div>
+                <div class="val">Ежедневно · 10:00 — 22:00</div>
+              </div>
+            </li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></div>
+              <div>
+                <div class="lbl">Email</div>
+                <div class="val"><a href="mailto:hello@blade.co">hello@blade.co</a></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <form class="contact-form" id="bookingForm">
+          <h3>Оставить заявку</h3>
+          <p>Все поля обязательны. Мы свяжемся с вами для подтверждения.</p>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="name">Имя</label>
+              <input id="name" type="text" placeholder="Александр" required>
+            </div>
+            <div class="field">
+              <label for="phone">Телефон</label>
+              <input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="service">Услуга</label>
+            <select id="service" required>
+              <option value="">Выберите услугу</option>
+              <option>Классическая стрижка</option>
+              <option>Модельная стрижка</option>
+              <option>Моделирование бороды</option>
+              <option>Стрижка + борода</option>
+              <option>Классическое бритьё</option>
+              <option>Комплекс «Всё включено»</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="comment">Комментарий</label>
+            <textarea id="comment" placeholder="Удобное время, пожелания к мастеру..."></textarea>
+          </div>
+
+          <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+            <label for="website">Не заполняйте это поле</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="vpn-notice">
+            <span class="vpn-notice-text"><span class="prompt">&gt;</span> заявка отправляется напрямую в Telegram — VPN не требуется</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary form-submit" id="submitBtn">Отправить заявку <span class="chev">→</span></button>
+          <div class="form-note">Нажимая кнопку, вы соглашаетесь с <span>политикой обработки данных</span></div>
+          <div class="form-status" id="formStatus"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ PHILOSOPHY PAGE ============ -->
+<main class="page" id="page-philosophy">
+
+  <!-- HERO -->
+  <header class="philosophy-hero">
+    <div class="container">
+      <div class="section-label">Манифест · 001</div>
+      <h1>Мы не стрижём<br>волосы. Мы<br><em>возвращаем</em><br>мужчине форму.</h1>
+      <p class="lede">Барбершоп — это место, где время замедляется, а мужчина остаётся наедине с собой, зеркалом и мастером, который знает своё дело.</p>
+    </div>
+  </header>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="container">
+      <div class="manifesto-grid">
+        <div class="manifesto-label">
+          <div class="section-label" style="margin-bottom:16px;">Три тезиса</div>
+          <p style="font-size:14px;color:var(--color-ash-gray);line-height:1.6;">То, во что мы верим. То, от чего не отступаем — ни в стрижке, ни в бритье, ни в разговоре у кресла.</p>
+        </div>
+        <div class="manifesto-items">
+          <div class="manifesto-item">
+            <div class="num">01</div>
+            <div>
+              <h3>Эстетика — это <em>дисциплина</em>.</h3>
+              <p>Тренд приходит и уходит. Форма остаётся. Мы делаем то, что будет выглядеть достойно через месяц и через год.</p>
+            </div>
+          </div>
+          <div class="manifesto-item">
+            <div class="num">02</div>
+            <div>
+              <h3>Бритьё — это <em>ритуал</em>.</h3>
+              <p>Горячее полотенце, тёплая пена, три прохода лезвием, холодный компресс и одеколон. Это 40 минут тишины — именно поэтому возвращаются снова.</p>
+            </div>
+          </div>
+          <div class="manifesto-item">
+            <div class="num">03</div>
+            <div>
+              <h3>Мастер — это <em>ремесленник</em>.</h3>
+              <p>Пять лет ученичества — прежде чем получить собственное кресло. Мы не называем себя «топ-мастерами» — мы просто хорошо делаем свою работу.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section class="principles">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Четыре принципа</div>
+        <h2 class="section-title">На чём<br>держится дом</h2>
+        <p class="section-desc">Четыре слова, которые мы произносим вслух, когда принимаем нового мастера. Если что-то им противоречит — мы это не делаем.</p>
+      </div>
+
+      <div class="principles-grid">
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 3 7 L 21 7 L 21 17 L 3 17 Z"/>
+              <path d="M 7 7 L 7 11"/>
+              <path d="M 11 7 L 11 13"/>
+              <path d="M 15 7 L 15 11"/>
+              <path d="M 19 7 L 19 13"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 01</div>
+          <h3>Чёткость</h3>
+          <p>Линия есть линия. Никаких «почти» и «сойдёт». Если контур не идеален — переделываем.</p>
+        </div>
+
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 4 4 L 12 6 L 12 20 L 4 18 Z"/>
+              <path d="M 20 4 L 12 6 L 12 20 L 20 18 Z"/>
+              <path d="M 4 4 L 12 2 L 20 4"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 02</div>
+          <h3>Традиция</h3>
+          <p>Классическая стрижка, классическое бритьё, классические инструменты. Учимся у мастеров, а не у трендов.</p>
+        </div>
+
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 2 12 C 5 6 10 5 12 5 C 14 5 19 6 22 12 C 19 18 14 19 12 19 C 10 19 5 18 2 12 Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 03</div>
+          <h3>Внимание</h3>
+          <p>Смотрим на форму черепа, направление роста волос, на то, как мужчина держит плечи. Стрижка должна работать в жизни.</p>
+        </div>
+
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 12 2 C 12 2 7 8 7 13 C 7 16.5 9.5 19 12 19 C 14.5 19 17 16.5 17 13 C 17 8 12 2 12 2 Z"/>
+              <path d="M 12 11 C 12 11 10 13 10 15 C 10 16.5 11 17.5 12 17.5 C 13 17.5 14 16.5 14 15 C 14 13 12 11 12 11 Z"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 04</div>
+          <h3>Ритуал</h3>
+          <p>Каждое движение — последовательность, отточенная годами. Это не суета. Это медитация. Клиент это чувствует.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREED QUOTE -->
+  <section class="creed">
+    <div class="container">
+      <span class="creed-mark">"</span>
+      <blockquote class="creed-quote">
+        Хорошая стрижка — та, которую <em>не замечают</em>.<br>
+        Замечают только плохую.
+      </blockquote>
+      <div class="creed-author">— принцип <span>blade &amp; co.</span></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="creed-cta">
+    <div class="container">
+      <h2>Проверим на себе?</h2>
+      <p>Запишитесь — и посмотрите, как работает философия на практике.</p>
+      <button class="btn btn-primary" data-nav="home" data-scroll="contact">Записаться в барбершоп <span class="chev">→</span></button>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <div>© 2025 BLADE &amp; CO. — барбершоп</div>
+    <div>
+      <a href="#">Политика</a>
+      <a href="#">Условия</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============ SIDEBAR MENU ============
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const sidebarClose = document.getElementById('sidebarClose');
+
+  function openMenu() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('open');
+    hamburgerBtn.classList.add('open');
+    document.body.classList.add('menu-open');
+    sidebar.setAttribute('aria-hidden', 'false');
+  }
+  function closeMenu() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('open');
+    hamburgerBtn.classList.remove('open');
+    document.body.classList.remove('menu-open');
+    sidebar.setAttribute('aria-hidden', 'true');
+  }
+
+  hamburgerBtn.addEventListener('click', () => {
+    if (sidebar.classList.contains('open')) closeMenu();
+    else openMenu();
+  });
+  sidebarOverlay.addEventListener('click', closeMenu);
+  sidebarClose.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) closeMenu();
+  });
+
+  // ============ PAGE NAVIGATION ============
+  const pages = {
+    home: document.getElementById('page-home'),
+    philosophy: document.getElementById('page-philosophy')
+  };
+
+  function navigateTo(pageName, scrollTo) {
+    Object.values(pages).forEach(p => p.classList.remove('active'));
+    pages[pageName].classList.add('active');
+    closeMenu();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    if (scrollTo) {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const target = document.getElementById(scrollTo);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      });
+    }
+
+    if (pageName === 'philosophy') history.replaceState(null, '', '#philosophy');
+    else history.replaceState(null, '', window.location.pathname);
+  }
+
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = el.getAttribute('data-nav');
+      const scroll = el.getAttribute('data-scroll');
+      navigateTo(page, scroll);
+    });
+  });
+
+  document.querySelectorAll('.logo').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('home');
+    });
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash === '#philosophy') navigateTo('philosophy');
+  });
+
+  // ============ TELEGRAM BOOKING FORM ============
+  const bookingForm = document.getElementById('bookingForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formStatus = document.getElementById('formStatus');
+  let isSubmitting = false;
+
+  function showStatus(message, type) {
+    formStatus.textContent = message;
+    formStatus.className = 'form-status ' + type;
+  }
+
+  bookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const payload = {
+      name: document.getElementById('name').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      service: document.getElementById('service').value,
+      comment: document.getElementById('comment').value.trim(),
+      website: document.getElementById('website').value // honeypot field
+    };
+
+    if (!payload.name || !payload.phone || !payload.service) {
+      showStatus('⚠ Заполните все обязательные поля', 'error');
+      return;
+    }
+
+    const originalBtn = submitBtn.innerHTML;
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Отправка...';
+    formStatus.className = 'form-status';
+
+    try {
+      const response = await fetch('/api/send-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || 'Не удалось отправить заявку');
+      }
+
+      showStatus('✓ Заявка отправлена. Мы перезвоним в течение 15 минут.', 'success');
+      bookingForm.reset();
+      submitBtn.innerHTML = '✓ Отправлено';
+    } catch (err) {
+      showStatus('⚠ Не удалось отправить заявку. Позвоните нам: +7 (495) 123-45-67', 'error');
+      submitBtn.innerHTML = originalBtn;
+    } finally {
+      isSubmitting = false;
+      if (submitBtn.innerHTML !== '✓ Отправлено') submitBtn.disabled = false;
+      else {
+        window.setTimeout(() => {
+          submitBtn.innerHTML = originalBtn;
+          submitBtn.disabled = false;
+        }, 3000);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
