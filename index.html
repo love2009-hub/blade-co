@@ -1538,8 +1538,9 @@
   // ============ YOOKASSA PAYMENT INTEGRATION (НОВОЕ) ============
   const payOnlineBtn = document.getElementById('payOnlineBtn');
   
-  // !!! ЗАМЕНИТЕ ЭТУ ССЫЛКУ НА URL ВАШЕГО CLOUDFLARE WORKER !!!
-  const WORKER_URL = 'https://yookassa-payment.aroslavrazzivin.workers.dev/'; 
+  // ВАШ URL CLOUDFLARE WORKER
+  const WORKER_URL = 'https://yookassa-payment.aroslavrazzivin.workers.dev/';
+  const SITE_URL = 'https://love2009-hub.github.io/blade-co/';
 
   if (payOnlineBtn) {
     payOnlineBtn.addEventListener('click', async () => {
@@ -1552,7 +1553,7 @@
         return;
       }
 
-      // Карта цен для автоматического определения суммы
+      // Карта цен для автоматического определения суммы (соответствует списку услуг на сайте)
       const prices = {
         'Классическая стрижка': '1800.00',
         'Модельная стрижка': '2400.00',
@@ -1570,7 +1571,7 @@
 
       const amount = prices[service] || '1000.00';
       const description = `Запись: ${service} (${name})`;
-      const returnUrl = window.location.origin + window.location.pathname + '#contact?payment=success';
+      const returnUrl = `${SITE_URL}#contact?payment=success`;
 
       payOnlineBtn.disabled = true;
       payOnlineBtn.innerHTML = 'Создание ссылки на оплату...';
