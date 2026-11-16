@@ -516,7 +516,7 @@
       <div class="section-head">
         <div class="section-label">Логистика · СДЭК</div>
         <h2 class="section-title">Доставка товаров<br>по всей России</h2>
-        <p class="section-desc">Отправляем фирменную косметику, аксессуары и подарочные сертификаты в любой пункт выдачи СДЭК. Рассчитайте стоимость и выберите удобный ПВЗ на карте.</p>
+        <p class="section-desc">Отправляем фирменную косметику, аксессуары и подарочные сертификаты в любой пункт выдачи СДЭК. Выберите город и нужный ПВЗ прямо на карте.</p>
       </div>
       <div class="contact-grid">
         <div class="contact-info" style="padding: 32px;">
@@ -544,16 +544,13 @@
           </div>
 
           <h3 style="font-size: 22px; margin-top: 32px; margin-bottom: 12px;">3. Параметры посылки</h3>
-          <div class="form-row">
-            <div class="field"><label for="cdek-weight">Вес (кг)</label><input id="cdek-weight" type="number" value="1" min="0.1" step="0.1"></div>
-            <div class="field">
-              <label for="cdek-tariff">Тип доставки</label>
-              <select id="cdek-tariff">
-                <option value="136">Посылка склад-дверь</option>
-                <option value="137">Посылка склад-склад</option>
-                <option value="138">Магистральный экспресс</option>
-              </select>
-            </div>
+          <div class="field">
+            <label for="cdek-tariff">Тип доставки</label>
+            <select id="cdek-tariff">
+              <option value="136">Посылка склад-дверь</option>
+              <option value="137">Посылка склад-склад</option>
+              <option value="138">Магистральный экспресс</option>
+            </select>
           </div>
           <button id="cdek-calc-btn" class="btn btn-primary form-submit" disabled>Рассчитать стоимость <span class="chev">→</span></button>
           <div id="cdek-calc-result" class="calc-result">
@@ -787,7 +784,7 @@
   function escapeHtml(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
 
   // ==========================================
-  // СДЭК + ЯНДЕКС КАРТЫ
+  // СДЭК + ЯНДЕКС КАРТЫ (ОБНОВЛЕННАЯ ЛОГИКА)
   // ==========================================
   let cdekMap = null;
   let cdekObjectManager = null;
@@ -804,15 +801,24 @@
     script.onload = () => {
       ymaps.ready(() => {
         cdekMap = new ymaps.Map('cdek-map', { center: [55.751574, 37.573856], zoom: 10, controls: ['zoomControl'] });
-        cdekObjectManager = new ymaps.ObjectManager({ clusterize: true, gridSize: 32, clusterDisableClickZoom: false });
+        
+        // Включаем кластеризацию для отображения всех ПВЗ без перегрузки карты
+        cdekObjectManager = new ymaps.ObjectManager({ 
+          clusterize: true, 
+          gridSize: 32, 
+          clusterDisableClickZoom: false 
+        });
         cdekObjectManager.clusters.options.set({ preset: 'islands#invertedVioletClusterIcons' });
         cdekObjectManager.objects.options.set({ preset: 'islands#violetDotIcon' });
         cdekMap.geoObjects.add(cdekObjectManager);
+
+        // Клик по маркеру на карте выбирает этот ПВЗ
         cdekObjectManager.objects.events.add('click', function (e) {
           const objectId = e.get('objectId');
           const pvzData = cdekObjectManager.objects.getById(objectId).properties;
           selectPvzByCode(pvzData.code);
         });
+
         document.getElementById('cdek-map-loader').style.display = 'none';
       });
     };
@@ -834,7 +840,7 @@
 
   async function searchCities(query) {
     try {
-      const res = await fetch(`${CDEK_WORKER_URL}/cities?city=${encodeURIComponent(query)}&size=10`);
+      const res = await fetch(`${CDEK_WORKER_URL}/cities?city=${encodeURIComponent(query)}&size=15`);
       const data = await res.json();
       suggestionsBox.innerHTML = '';
       if (data && Array.isArray(data) && data.length > 0) {
@@ -850,7 +856,7 @@
             currentCityName = city.city;
             suggestionsBox.classList.remove('open');
             document.getElementById('cdek-selected-city').style.display = 'block';
-            document.getElementById('cdek-city-name').textContent = city.city;
+            document.getElementById('cdek-city-name').textContent = `${city.city}, ${city.region || ''}`;
             document.getElementById('cdek-pvz-filter').disabled = false;
             loadPvzForCity(city.code, city.city);
           });
@@ -863,14 +869,16 @@
   async function loadPvzForCity(cityCode, cityName) {
     if (!cdekMap) return;
     const pvzList = document.getElementById('cdek-pvz-list');
-    pvzList.innerHTML = '<div style="padding: 14px; color: var(--color-ash-gray); font-size: 13px;">Загрузка пунктов выдачи...</div>';
+    pvzList.innerHTML = '<div style="padding: 14px; color: var(--color-ash-gray); font-size: 13px;">Загрузка всех пунктов выдачи...</div>';
     pvzList.classList.add('open');
     try {
-      const res = await fetch(`${CDEK_WORKER_URL}/pvz?city_code=${cityCode}&is_dressing_room=true`);
+      // Запрашиваем ВСЕ ПВЗ в городе без дополнительных фильтров
+      const res = await fetch(`${CDEK_WORKER_URL}/pvz?city_code=${cityCode}`);
       const data = await res.json();
       allPvzData = Array.isArray(data) ? data : [];
       renderPvzList(allPvzData);
       renderPvzOnMap(allPvzData);
+      
       if (allPvzData.length > 0 && allPvzData[0].location) {
         cdekMap.setCenter([parseFloat(allPvzData[0].location.latitude), parseFloat(allPvzData[0].location.longitude)], 11);
       }
@@ -893,6 +901,8 @@
     const container = document.getElementById('cdek-pvz-list');
     container.innerHTML = '';
     if (pvzList.length === 0) { container.innerHTML = '<div style="padding: 14px; color: var(--color-ash-gray); font-size: 13px;">ПВЗ не найдены</div>'; return; }
+    
+    // Ограничиваем список 50 элементами для производительности UI, но на карте будут ВСЕ
     pvzList.slice(0, 50).forEach(pvz => {
       const div = document.createElement('div');
       div.className = 'pvz-item' + (selectedPvz && selectedPvz.code === pvz.code ? ' selected' : '');
@@ -906,6 +916,8 @@
   function renderPvzOnMap(pvzList) {
     if (!cdekObjectManager) return;
     cdekObjectManager.removeAll();
+    
+    // Добавляем ВСЕ ПВЗ на карту
     const features = pvzList.filter(p => p.location && p.location.latitude && p.location.longitude).map(pvz => ({
       type: 'Feature', id: pvz.code,
       geometry: { type: 'Point', coordinates: [parseFloat(pvz.location.latitude), parseFloat(pvz.location.longitude)] },
@@ -917,17 +929,33 @@
   function selectPvzByCode(code) {
     const pvz = allPvzData.find(p => p.code === code);
     if (!pvz) return;
+    
     selectedPvz = pvz;
+    
+    // Обновляем карточку выбранного ПВЗ
     const card = document.getElementById('cdek-selected-pvz');
     card.classList.add('open');
     document.getElementById('cdek-pvz-name').textContent = pvz.name || 'ПВЗ ' + pvz.code;
     document.getElementById('cdek-pvz-address').textContent = pvz.address || '';
     const workTime = pvz.work_time && pvz.work_time.length > 0 ? `Пн-Пт: ${pvz.work_time[0].time_start || ''}-${pvz.work_time[0].time_stop || ''}` : '';
     document.getElementById('cdek-pvz-worktime').textContent = workTime;
+    
+    // Разрешаем расчет
     document.getElementById('cdek-calc-btn').disabled = false;
+    
+    // Подсветка в списке
     document.querySelectorAll('.pvz-item').forEach(el => el.classList.remove('selected'));
-    document.querySelectorAll('.pvz-item').forEach(el => { if (el.querySelector('.pvz-name')?.textContent === (pvz.name || 'ПВЗ ' + pvz.code)) el.classList.add('selected'); });
-    if (cdekMap && pvz.location) cdekMap.setCenter([parseFloat(pvz.location.latitude), parseFloat(pvz.location.longitude)], 15);
+    document.querySelectorAll('.pvz-item').forEach(el => { 
+      if (el.querySelector('.pvz-name')?.textContent === (pvz.name || 'ПВЗ ' + pvz.code)) {
+        el.classList.add('selected');
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } 
+    });
+    
+    // Центрируем карту на выбранном ПВЗ
+    if (cdekMap && pvz.location) {
+      cdekMap.setCenter([parseFloat(pvz.location.latitude), parseFloat(pvz.location.longitude)], 15);
+    }
   }
 
   const calcBtn = document.getElementById('cdek-calc-btn');
@@ -935,14 +963,17 @@
     calcBtn.addEventListener('click', async () => {
       if (!selectedPvz || !currentCityCode) return;
       const btn = calcBtn; btn.innerHTML = 'Расчет...'; btn.disabled = true;
-      const weight = parseFloat(document.getElementById('cdek-weight').value) || 1;
+      
       const tariffCode = parseInt(document.getElementById('cdek-tariff').value);
+      
+      // Вес жестко задан как 1000 грамм (1 кг), так как поле ввода удалено
       const payload = {
         type: 1, tariff_code: tariffCode,
         from_location: { code: CDEK_SENDER_CITY_CODE },
         to_location: { code: currentCityCode },
-        packages: [{ weight: Math.round(weight * 1000), length: 20, width: 20, height: 10 }]
+        packages: [{ weight: 1000, length: 20, width: 20, height: 10 }]
       };
+      
       try {
         const res = await fetch(`${CDEK_WORKER_URL}/calculator`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const data = await res.json();
@@ -969,14 +1000,16 @@
     orderBtn.addEventListener('click', async () => {
       const btn = orderBtn; btn.innerHTML = 'Оформление...'; btn.disabled = true;
       orderStatus.classList.add('open'); orderStatus.textContent = 'Создание заказа в СДЭК...';
-      const weight = parseFloat(document.getElementById('cdek-weight').value) || 1;
+      
       const tariffCode = parseInt(document.getElementById('cdek-tariff').value);
+      
       const orderData = {
         type: 1, number: `BLADE-${Date.now()}`, tariff_code: tariffCode, comment: 'Доставка из BLADE & CO.',
         sender: { name: 'BLADE & CO.', phones: [{ number: '+74951234567' }], address: { city_code: CDEK_SENDER_CITY_CODE, address: 'ул. Тверская, 12' } },
         recipient: { name: 'Клиент', phones: [{ number: document.getElementById('phone').value.replace(/\D/g, '') || '79000000000' }], address: { pvz_code: selectedPvz.code } },
-        packages: [{ number: `PKG-${Date.now()}`, weight: Math.round(weight * 1000), length: 20, width: 20, height: 10, comment: 'Косметика BLADE & CO.' }]
+        packages: [{ number: `PKG-${Date.now()}`, weight: 1000, length: 20, width: 20, height: 10, comment: 'Косметика BLADE & CO.' }]
       };
+      
       try {
         const res = await fetch(`${CDEK_WORKER_URL}/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orders: [orderData] }) });
         const data = await res.json();
