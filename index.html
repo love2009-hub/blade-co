@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -22,7 +23,6 @@
     --color-iris-violet-glow: #baa7ff;
     --color-signal-blue: #3b9eff;
     --color-pulse-green: #3ad389;
-    --color-alarm-red: #ff9592;
     --font-inter: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Playfair Display', ui-serif, Georgia, serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -42,266 +42,886 @@
   }
   body.menu-open { overflow: hidden; }
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
 
+  /* ============ PAGE SWITCHING ============ */
   .page { display: none; }
   .page.active { display: block; animation: pageFade 400ms ease-out; }
-  @keyframes pageFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pageFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
+  /* ============ NAV ============ */
   nav {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     border-bottom: 1px solid var(--color-graphite-hairline);
   }
-  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 16px;
+  }
   .nav-left { display: flex; align-items: center; gap: 16px; }
   .logo {
-    font-family: var(--font-display); font-size: 20px; color: var(--color-white);
-    letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px;
-    cursor: pointer; text-decoration: none; transition: opacity 150ms ease-out;
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--color-white);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 150ms ease-out;
   }
   .logo:hover { opacity: 0.75; }
-  .logo-dot { width: 6px; height: 6px; background: var(--color-iris-violet); border-radius: 50%; }
+  .logo-dot {
+    width: 6px; height: 6px;
+    background: var(--color-iris-violet);
+    border-radius: 50%;
+  }
 
+  /* ============ HAMBURGER ============ */
   .hamburger {
-    width: 40px; height: 40px; background: transparent; border: 1px solid var(--color-graphite-hairline);
-    border-radius: 6px; cursor: pointer; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 5px; padding: 0; transition: border-color 150ms ease-out;
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0;
+    transition: border-color 150ms ease-out;
   }
   .hamburger:hover { border-color: var(--color-white); }
-  .hamburger span { display: block; width: 18px; height: 1.5px; background: var(--color-white); transition: all 250ms ease-out; transform-origin: center; }
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--color-white);
+    transition: all 250ms ease-out;
+    transform-origin: center;
+  }
   .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; }
   .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
+  /* ============ SIDEBAR MENU ============ */
   .sidebar-overlay {
-    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px); z-index: 60; opacity: 0; pointer-events: none; transition: opacity 250ms ease-out;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 250ms ease-out;
   }
   .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
   .sidebar {
-    position: fixed; top: 0; left: 0; height: 100vh; width: 340px; max-width: 85vw;
-    background: var(--color-void-black); border-right: 1px solid var(--color-graphite-hairline);
-    z-index: 70; transform: translateX(-100%); transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; flex-direction: column; padding: 24px;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: 340px;
+    max-width: 85vw;
+    background: var(--color-void-black);
+    border-right: 1px solid var(--color-graphite-hairline);
+    z-index: 70;
+    transform: translateX(-100%);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
   }
   .sidebar.open { transform: translateX(0); }
-  .sidebar-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 24px; border-bottom: 1px solid var(--color-graphite-hairline); margin-bottom: 32px; }
+  .sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    margin-bottom: 32px;
+  }
   .sidebar-close {
-    width: 32px; height: 32px; background: transparent; border: 1px solid var(--color-graphite-hairline);
-    border-radius: 6px; color: var(--color-white); cursor: pointer; display: flex; align-items: center;
-    justify-content: center; font-size: 18px; transition: border-color 150ms ease-out;
+    width: 32px; height: 32px;
+    background: transparent;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 6px;
+    color: var(--color-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: border-color 150ms ease-out;
   }
   .sidebar-close:hover { border-color: var(--color-white); }
-  .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-  .sidebar-nav a, .sidebar-nav button {
-    display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 12px;
-    color: var(--color-bone-white); text-decoration: none; font-size: 16px; font-weight: 400; font-family: var(--font-inter);
-    border-radius: 6px; transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
-    border: 1px solid transparent; background: transparent; cursor: pointer; text-align: left;
+  .sidebar-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
-  .sidebar-nav a:hover, .sidebar-nav button:hover { background: rgba(255, 255, 255, 0.03); border-color: var(--color-graphite-hairline); color: var(--color-white); }
-  .sidebar-nav .chev { color: var(--color-ash-gray); transition: transform 150ms ease-out, color 150ms ease-out; }
-  .sidebar-nav a:hover .chev, .sidebar-nav button:hover .chev { color: var(--color-iris-violet); transform: translateX(3px); }
-  .sidebar-footer { margin-top: auto; padding-top: 24px; border-top: 1px solid var(--color-graphite-hairline); font-family: var(--font-mono); font-size: 11px; color: var(--color-ash-gray); text-transform: uppercase; letter-spacing: 0.1em; }
-  .sidebar-footer .status { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .sidebar-footer .dot { width: 6px; height: 6px; background: var(--color-pulse-green); border-radius: 50%; box-shadow: 0 0 8px var(--color-pulse-green); }
+  .sidebar-nav a,
+  .sidebar-nav button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 12px;
+    color: var(--color-bone-white);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: var(--font-inter);
+    border-radius: 6px;
+    transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+  }
+  .sidebar-nav a:hover,
+  .sidebar-nav button:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--color-graphite-hairline);
+    color: var(--color-white);
+  }
+  .sidebar-nav .chev {
+    color: var(--color-ash-gray);
+    transition: transform 150ms ease-out, color 150ms ease-out;
+  }
+  .sidebar-nav a:hover .chev,
+  .sidebar-nav button:hover .chev {
+    color: var(--color-iris-violet);
+    transform: translateX(3px);
+  }
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-graphite-hairline);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .sidebar-footer .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .sidebar-footer .dot {
+    width: 6px; height: 6px;
+    background: var(--color-pulse-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-pulse-green);
+  }
 
+  /* ============ BUTTONS ============ */
   .btn {
-    display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 6px;
-    font-family: var(--font-inter); font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer;
-    transition: all 150ms ease-out; border: 1px solid var(--color-graphite-hairline); background: transparent; color: var(--color-white);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-family: var(--font-inter);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+    border: 1px solid var(--color-graphite-hairline);
+    background: transparent;
+    color: var(--color-white);
   }
   .btn:hover { border-color: var(--color-white); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-primary { background: var(--color-white); color: var(--color-void-black); border-color: var(--color-white); }
-  .btn-primary:hover { background: transparent; color: var(--color-white); }
+  .btn-primary {
+    background: var(--color-white);
+    color: var(--color-void-black);
+    border-color: var(--color-white);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--color-white);
+  }
   .btn .chev { transition: transform 150ms ease-out; }
   .btn:hover .chev { transform: translateX(3px); }
 
-  .hero { padding: 96px 0 120px; border-bottom: 1px solid var(--color-graphite-hairline); position: relative; overflow: hidden; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-  .hero-pill {
-    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--color-graphite-hairline);
-    border-radius: 9999px; font-size: 13px; color: var(--color-bone-white); margin-bottom: 32px; font-family: var(--font-mono);
+  /* ============ HERO ============ */
+  .hero {
+    padding: 96px 0 120px;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    position: relative;
+    overflow: hidden;
   }
-  .hero-pill .dot { width: 6px; height: 6px; background: var(--color-pulse-green); border-radius: 50%; box-shadow: 0 0 8px var(--color-pulse-green); }
-  .hero h1 { font-family: var(--font-display); font-size: clamp(48px, 7vw, 88px); font-weight: 400; line-height: 1.02; letter-spacing: -0.02em; color: var(--color-white); margin-bottom: 24px; }
-  .hero h1 em { font-style: italic; color: var(--color-iris-violet); }
-  .hero-sub { font-size: 18px; color: var(--color-ash-gray); max-width: 480px; margin-bottom: 40px; line-height: 1.6; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 9999px;
+    font-size: 13px;
+    color: var(--color-bone-white);
+    margin-bottom: 32px;
+    font-family: var(--font-mono);
+  }
+  .hero-pill .dot {
+    width: 6px; height: 6px;
+    background: var(--color-pulse-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-pulse-green);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--color-white);
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--color-iris-violet);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--color-ash-gray);
+    max-width: 480px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
   .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
   .hero-visual {
-    position: relative; aspect-ratio: 1; border: 1px solid var(--color-graphite-hairline); border-radius: 16px;
-    background: radial-gradient(circle at 30% 30%, rgba(146, 129, 247, 0.12), transparent 60%), #000;
-    display: flex; align-items: center; justify-content: center; overflow: hidden; perspective: 1000px;
+    position: relative;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(146, 129, 247, 0.12), transparent 60%),
+      #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    perspective: 1000px;
   }
   .hero-visual::before {
-    content: ''; position: absolute; inset: 0;
-    background-image: linear-gradient(var(--color-graphite-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-graphite-hairline) 1px, transparent 1px);
-    background-size: 40px 40px; opacity: 0.25;
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-graphite-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-graphite-hairline) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.25;
   }
-  .scissors-wrap { width: 78%; aspect-ratio: 1; position: relative; transform-style: preserve-3d; animation: scissorsSpin 18s linear infinite; }
-  @keyframes scissorsSpin { from { transform: rotateY(0deg) rotateX(12deg); } to { transform: rotateY(360deg) rotateX(12deg); } }
-  .scissors-orient { width: 100%; height: 100%; filter: drop-shadow(0 0 50px rgba(146, 129, 247, 0.28)); display: flex; align-items: center; justify-content: center; }
-  .scissors-orient img { width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
-  .hero-visual .tag { position: absolute; bottom: 20px; left: 20px; font-family: var(--font-mono); font-size: 12px; color: var(--color-iris-violet); z-index: 2; }
+  .scissors-wrap {
+    width: 78%;
+    aspect-ratio: 1;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: scissorsSpin 18s linear infinite;
+  }
+  @keyframes scissorsSpin {
+    from { transform: rotateY(0deg) rotateX(12deg); }
+    to   { transform: rotateY(360deg) rotateX(12deg); }
+  }
+  .scissors-orient {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 50px rgba(146, 129, 247, 0.28));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scissors-orient img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .hero-visual .tag {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    z-index: 2;
+  }
   .hero-visual .tag span { color: var(--color-ash-gray); }
 
+  /* ============ SECTIONS ============ */
   section { padding: 96px 0; border-bottom: 1px solid var(--color-graphite-hairline); }
   .section-head { margin-bottom: 56px; max-width: 720px; }
-  .section-label { font-family: var(--font-mono); font-size: 12px; color: var(--color-iris-violet); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--color-iris-violet); }
-  .section-title { font-family: var(--font-display); font-size: clamp(36px, 5vw, 56px); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; color: var(--color-white); margin-bottom: 20px; }
-  .section-desc { font-size: 17px; color: var(--color-ash-gray); line-height: 1.6; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--color-iris-violet);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-white);
+    margin-bottom: 20px;
+  }
+  .section-desc {
+    font-size: 17px;
+    color: var(--color-ash-gray);
+    line-height: 1.6;
+  }
 
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .service-card { background: var(--color-void-black); border: 1px solid var(--color-graphite-hairline); border-radius: 16px; padding: 32px; transition: border-color 150ms ease-out; position: relative; overflow: hidden; }
+  /* ============ SERVICES ============ */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .service-card {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 32px;
+    transition: border-color 150ms ease-out;
+    position: relative;
+    overflow: hidden;
+  }
   .service-card:hover { border-color: var(--color-iris-violet); }
-  .service-card:hover .service-icon { background: rgba(146, 129, 247, 0.08); border-color: var(--color-iris-violet); }
+  .service-card:hover .service-icon {
+    background: rgba(146, 129, 247, 0.08);
+    border-color: var(--color-iris-violet);
+  }
   .service-card:hover .service-icon svg { stroke: var(--color-iris-violet); }
-  .service-icon { width: 56px; height: 56px; border-radius: 12px; border: 1px solid var(--color-graphite-hairline); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; transition: all 150ms ease-out; }
-  .service-icon svg { width: 28px; height: 28px; stroke: var(--color-bone-white); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 150ms ease-out; }
-  .service-card h3 { font-family: var(--font-inter); font-size: 20px; font-weight: 500; color: var(--color-white); margin-bottom: 12px; letter-spacing: -0.01em; }
-  .service-card p { font-size: 14px; color: var(--color-ash-gray); line-height: 1.6; margin-bottom: 24px; }
-  .service-list { list-style: none; border-top: 1px solid var(--color-graphite-hairline); padding-top: 20px; }
-  .service-list li { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 14px; border-bottom: 1px solid rgba(41, 45, 48, 0.5); }
+  .service-icon {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    border: 1px solid var(--color-graphite-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    transition: all 150ms ease-out;
+  }
+  .service-icon svg {
+    width: 28px; height: 28px;
+    stroke: var(--color-bone-white);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 150ms ease-out;
+  }
+  .service-card h3 {
+    font-family: var(--font-inter);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-white);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .service-card p {
+    font-size: 14px;
+    color: var(--color-ash-gray);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .service-list {
+    list-style: none;
+    border-top: 1px solid var(--color-graphite-hairline);
+    padding-top: 20px;
+  }
+  .service-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(41, 45, 48, 0.5);
+  }
   .service-list li:last-child { border-bottom: none; }
   .service-list .name { color: var(--color-bone-white); }
-  .service-list .price { font-family: var(--font-mono); font-size: 13px; color: var(--color-iris-violet); }
+  .service-list .price {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-iris-violet);
+  }
 
-  .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: step; }
-  .process-step { background: var(--color-void-black); border: 1px solid var(--color-graphite-hairline); border-radius: 16px; padding: 28px; position: relative; counter-increment: step; }
-  .process-step::before { content: "0" counter(step); font-family: var(--font-mono); font-size: 13px; color: var(--color-iris-violet); display: block; margin-bottom: 24px; }
-  .process-step h4 { font-size: 17px; font-weight: 500; color: var(--color-white); margin-bottom: 10px; letter-spacing: -0.01em; }
-  .process-step p { font-size: 14px; color: var(--color-ash-gray); line-height: 1.6; }
+  /* ============ PROCESS ============ */
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    counter-reset: step;
+  }
+  .process-step {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    counter-increment: step;
+  }
+  .process-step::before {
+    content: "0" counter(step);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-iris-violet);
+    display: block;
+    margin-bottom: 24px;
+  }
+  .process-step h4 {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--color-white);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .process-step p {
+    font-size: 14px;
+    color: var(--color-ash-gray);
+    line-height: 1.6;
+  }
 
-  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; }
-  .contact-info { background: var(--color-void-black); border: 1px solid var(--color-graphite-hairline); border-radius: 16px; padding: 40px; }
-  .contact-info h3 { font-family: var(--font-display); font-size: 32px; color: var(--color-white); margin-bottom: 16px; letter-spacing: -0.02em; }
-  .contact-info > p { color: var(--color-ash-gray); margin-bottom: 32px; line-height: 1.6; }
+  /* ============ CONTACT ============ */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 16px;
+  }
+  .contact-info {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .contact-info h3 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--color-white);
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .contact-info > p {
+    color: var(--color-ash-gray);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
   .contact-list { list-style: none; }
-  .contact-list li { display: flex; align-items: flex-start; gap: 16px; padding: 18px 0; border-top: 1px solid var(--color-graphite-hairline); }
+  .contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0;
+    border-top: 1px solid var(--color-graphite-hairline);
+  }
   .contact-list li:last-child { border-bottom: 1px solid var(--color-graphite-hairline); }
-  .contact-list .ic { width: 36px; height: 36px; border: 1px solid var(--color-graphite-hairline); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .contact-list .ic svg { width: 16px; height: 16px; stroke: var(--color-iris-violet); fill: none; stroke-width: 1.5; }
-  .contact-list .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--color-ash-gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-  .contact-list .val { color: var(--color-white); font-size: 15px; }
-  .contact-list a { color: var(--color-white); text-decoration: none; transition: color 150ms ease-out; }
+  .contact-list .ic {
+    width: 36px; height: 36px;
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-list .ic svg {
+    width: 16px; height: 16px;
+    stroke: var(--color-iris-violet);
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .contact-list .lbl {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .contact-list .val {
+    color: var(--color-white);
+    font-size: 15px;
+  }
+  .contact-list a {
+    color: var(--color-white);
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
   .contact-list a:hover { color: var(--color-iris-violet); }
 
-  .contact-form { background: var(--color-void-black); border: 1px solid var(--color-graphite-hairline); border-radius: 16px; padding: 40px; }
-  .contact-form h3 { font-family: var(--font-display); font-size: 32px; color: var(--color-white); margin-bottom: 8px; letter-spacing: -0.02em; }
-  .contact-form > p { color: var(--color-ash-gray); margin-bottom: 28px; font-size: 14px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  .field { margin-bottom: 12px; position: relative; }
-  .field label { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--color-ash-gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-  .field input, .field select, .field textarea {
-    width: 100%; background: var(--color-void-black); border: 1px solid var(--color-graphite-hairline); border-radius: 6px;
-    padding: 12px 14px; color: var(--color-white); font-family: var(--font-inter); font-size: 14px; transition: border-color 150ms ease-out; outline: none;
+  .contact-form {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .contact-form h3 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--color-white);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .contact-form > p {
+    color: var(--color-ash-gray);
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 6px;
+    padding: 12px 14px;
+    color: var(--color-white);
+    font-family: var(--font-inter);
+    font-size: 14px;
+    transition: border-color 150ms ease-out;
+    outline: none;
   }
   .field textarea { resize: vertical; min-height: 90px; }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--color-iris-violet); }
-  .field input::placeholder, .field textarea::placeholder { color: var(--color-smoke-gray); }
-  .form-submit { margin-top: 20px; width: 100%; justify-content: center; }
-  .form-note { margin-top: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--color-ash-gray); text-align: center; }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: var(--color-iris-violet); }
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--color-smoke-gray); }
+  .form-submit {
+    margin-top: 20px;
+    width: 100%;
+    justify-content: center;
+  }
+  .form-note {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ash-gray);
+    text-align: center;
+  }
   .form-note span { color: var(--color-iris-violet); }
-  .form-status { margin-top: 16px; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-family: var(--font-mono); display: none; border: 1px solid var(--color-graphite-hairline); }
-  .form-status.success { display: block; color: var(--color-pulse-green); border-color: var(--color-pulse-green); background: rgba(58, 211, 137, 0.05); }
-  .form-status.error { display: block; color: var(--color-alarm-red); border-color: var(--color-alarm-red); background: rgba(255, 149, 146, 0.05); }
-
-  /* CDEK Specific Styles */
-  .cdek-suggestions {
-    position: absolute; top: 100%; left: 0; right: 0; background: var(--color-void-black);
-    border: 1px solid var(--color-graphite-hairline); border-radius: 6px; margin-top: 4px; z-index: 100;
-    max-height: 240px; overflow-y: auto; display: none;
+  .form-status {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    display: none;
+    border: 1px solid var(--color-graphite-hairline);
   }
-  .cdek-suggestions.open { display: block; }
-  .cdek-suggestion-item {
-    padding: 12px 14px; cursor: pointer; font-size: 14px; color: var(--color-bone-white);
-    border-bottom: 1px solid rgba(41, 45, 48, 0.5); transition: background 150ms ease-out;
+  .form-status.success {
+    display: block;
+    color: var(--color-pulse-green);
+    border-color: var(--color-pulse-green);
+    background: rgba(58, 211, 137, 0.05);
   }
-  .cdek-suggestion-item:last-child { border-bottom: none; }
-  .cdek-suggestion-item:hover { background: rgba(146, 129, 247, 0.08); color: var(--color-white); }
-  .cdek-suggestion-item .region { font-family: var(--font-mono); font-size: 11px; color: var(--color-ash-gray); margin-left: 8px; }
+  .form-status.error {
+    display: block;
+    color: #ff9592;
+    border-color: #ff9592;
+    background: rgba(255, 149, 146, 0.05);
+  }
 
-  .pvz-list { max-height: 280px; overflow-y: auto; border: 1px solid var(--color-graphite-hairline); border-radius: 6px; margin-top: 12px; display: none; }
-  .pvz-list.open { display: block; }
-  .pvz-item { padding: 14px; cursor: pointer; border-bottom: 1px solid rgba(41, 45, 48, 0.5); transition: background 150ms ease-out; }
-  .pvz-item:last-child { border-bottom: none; }
-  .pvz-item:hover { background: rgba(146, 129, 247, 0.05); }
-  .pvz-item.selected { background: rgba(146, 129, 247, 0.1); border-left: 2px solid var(--color-iris-violet); }
-  .pvz-item .pvz-name { font-size: 14px; color: var(--color-white); font-weight: 500; margin-bottom: 4px; }
-  .pvz-item .pvz-addr { font-size: 13px; color: var(--color-ash-gray); margin-bottom: 4px; }
-  .pvz-item .pvz-time { font-family: var(--font-mono); font-size: 11px; color: var(--color-iris-violet); }
-
-  .selected-pvz-card { margin-top: 16px; padding: 16px; border: 1px solid var(--color-iris-violet); border-radius: 8px; display: none; background: rgba(146, 129, 247, 0.03); }
-  .selected-pvz-card.open { display: block; }
-  .selected-pvz-card .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--color-iris-violet); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-  .selected-pvz-card .name { font-weight: 500; color: var(--color-white); margin-bottom: 4px; }
-  .selected-pvz-card .addr { font-size: 14px; color: var(--color-ash-gray); margin-bottom: 4px; }
-  .selected-pvz-card .time { font-family: var(--font-mono); font-size: 12px; color: var(--color-smoke-gray); }
-
-  .calc-result { margin-top: 16px; padding: 20px; border: 1px solid var(--color-graphite-hairline); border-radius: 8px; display: none; background: rgba(58, 211, 137, 0.03); }
-  .calc-result.open { display: block; }
-  .calc-result .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--color-ash-gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-  .calc-result .price { font-size: 28px; font-weight: 500; color: var(--color-white); letter-spacing: -0.02em; }
-  .calc-result .days { font-size: 14px; color: var(--color-pulse-green); margin-top: 4px; }
-
-  .cdek-map-wrap { padding: 0; overflow: hidden; border: 1px solid var(--color-graphite-hairline); border-radius: 16px; min-height: 500px; position: relative; }
-  .cdek-map-wrap .map-loader { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--color-void-black); color: var(--color-ash-gray); font-family: var(--font-mono); font-size: 12px; z-index: 5; }
-  #cdek-map { width: 100%; height: 500px; }
-
-  .cdek-order-status { margin-top: 16px; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-family: var(--font-mono); display: none; border: 1px solid var(--color-graphite-hairline); background: rgba(146, 129, 247, 0.03); color: var(--color-bone-white); }
-  .cdek-order-status.open { display: block; }
-  .cdek-order-status a { color: var(--color-pulse-green); text-decoration: underline; }
-
-  .philosophy-hero { padding: 80px 0 96px; border-bottom: 1px solid var(--color-graphite-hairline); position: relative; overflow: hidden; }
-  .philosophy-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--color-graphite-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-graphite-hairline) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.15; pointer-events: none; }
+  /* ============ PHILOSOPHY PAGE ============ */
+  .philosophy-hero {
+    padding: 80px 0 96px;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    position: relative;
+    overflow: hidden;
+  }
+  .philosophy-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-graphite-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-graphite-hairline) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
   .philosophy-hero .container { position: relative; z-index: 1; }
-  .philosophy-hero h1 { font-family: var(--font-display); font-size: clamp(44px, 7vw, 88px); font-weight: 400; line-height: 1; letter-spacing: -0.03em; color: var(--color-white); margin-bottom: 24px; max-width: 900px; }
-  .philosophy-hero h1 em { font-style: italic; color: var(--color-iris-violet); }
-  .philosophy-hero .lede { font-family: var(--font-display); font-size: clamp(18px, 2vw, 22px); font-style: italic; color: var(--color-ash-gray); max-width: 640px; line-height: 1.4; letter-spacing: -0.01em; }
+  .philosophy-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-white);
+    margin-bottom: 24px;
+    max-width: 900px;
+  }
+  .philosophy-hero h1 em {
+    font-style: italic;
+    color: var(--color-iris-violet);
+  }
+  .philosophy-hero .lede {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2vw, 22px);
+    font-style: italic;
+    color: var(--color-ash-gray);
+    max-width: 640px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
 
-  .manifesto { padding: 80px 0; border-bottom: 1px solid var(--color-graphite-hairline); }
-  .manifesto-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 64px; }
-  .manifesto-label { font-family: var(--font-mono); font-size: 12px; color: var(--color-iris-violet); text-transform: uppercase; letter-spacing: 0.1em; position: sticky; top: 96px; align-self: start; }
-  .manifesto-items { display: flex; flex-direction: column; gap: 0; }
-  .manifesto-item { display: grid; grid-template-columns: 50px 1fr; gap: 24px; padding: 28px 0; border-top: 1px solid var(--color-graphite-hairline); align-items: start; }
+  .manifesto {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+  }
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 64px;
+  }
+  .manifesto-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: sticky;
+    top: 96px;
+    align-self: start;
+  }
+  .manifesto-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .manifesto-item {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--color-graphite-hairline);
+    align-items: start;
+  }
   .manifesto-item:last-child { border-bottom: 1px solid var(--color-graphite-hairline); }
-  .manifesto-item .num { font-family: var(--font-mono); font-size: 12px; color: var(--color-iris-violet); padding-top: 4px; }
-  .manifesto-item h3 { font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 28px); font-weight: 400; color: var(--color-white); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 10px; }
-  .manifesto-item h3 em { font-style: italic; color: var(--color-iris-violet); }
-  .manifesto-item p { font-size: 15px; color: var(--color-ash-gray); line-height: 1.55; max-width: 560px; }
+  .manifesto-item .num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-iris-violet);
+    padding-top: 4px;
+  }
+  .manifesto-item h3 {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 400;
+    color: var(--color-white);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .manifesto-item h3 em {
+    font-style: italic;
+    color: var(--color-iris-violet);
+  }
+  .manifesto-item p {
+    font-size: 15px;
+    color: var(--color-ash-gray);
+    line-height: 1.55;
+    max-width: 560px;
+  }
 
-  .principles { padding: 80px 0; border-bottom: 1px solid var(--color-graphite-hairline); }
-  .principles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .principle { background: var(--color-void-black); border: 1px solid var(--color-graphite-hairline); border-radius: 16px; padding: 28px; transition: border-color 150ms ease-out; position: relative; }
+  .principles {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+  }
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .principle {
+    background: var(--color-void-black);
+    border: 1px solid var(--color-graphite-hairline);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 150ms ease-out;
+    position: relative;
+  }
   .principle:hover { border-color: var(--color-iris-violet); }
-  .principle:hover .principle-icon { background: rgba(146, 129, 247, 0.08); border-color: var(--color-iris-violet); }
+  .principle:hover .principle-icon {
+    background: rgba(146, 129, 247, 0.08);
+    border-color: var(--color-iris-violet);
+  }
   .principle:hover .principle-icon svg { stroke: var(--color-iris-violet); }
-  .principle-icon { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--color-graphite-hairline); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; transition: all 150ms ease-out; }
-  .principle-icon svg { width: 20px; height: 20px; stroke: var(--color-bone-white); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 150ms ease-out; }
-  .principle .num { font-family: var(--font-mono); font-size: 11px; color: var(--color-iris-violet); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
-  .principle h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--color-white); margin-bottom: 10px; letter-spacing: -0.01em; line-height: 1.1; }
-  .principle p { font-size: 13px; color: var(--color-ash-gray); line-height: 1.55; }
+  .principle-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--color-graphite-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: all 150ms ease-out;
+  }
+  .principle-icon svg {
+    width: 20px; height: 20px;
+    stroke: var(--color-bone-white);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 150ms ease-out;
+  }
+  .principle .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-iris-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .principle h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--color-white);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .principle p {
+    font-size: 13px;
+    color: var(--color-ash-gray);
+    line-height: 1.55;
+  }
 
-  .creed { padding: 96px 0; border-bottom: 1px solid var(--color-graphite-hairline); text-align: center; }
-  .creed-quote { font-family: var(--font-display); font-size: clamp(24px, 3.5vw, 40px); font-weight: 400; font-style: italic; color: var(--color-white); line-height: 1.25; letter-spacing: -0.02em; max-width: 800px; margin: 0 auto 24px; }
-  .creed-quote em { color: var(--color-iris-violet); font-style: italic; }
-  .creed-author { font-family: var(--font-mono); font-size: 12px; color: var(--color-ash-gray); text-transform: uppercase; letter-spacing: 0.1em; }
+  .creed {
+    padding: 96px 0;
+    border-bottom: 1px solid var(--color-graphite-hairline);
+    text-align: center;
+  }
+  .creed-quote {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-white);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    max-width: 800px;
+    margin: 0 auto 24px;
+  }
+  .creed-quote em {
+    color: var(--color-iris-violet);
+    font-style: italic;
+  }
+  .creed-author {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ash-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
   .creed-author span { color: var(--color-iris-violet); }
-  .creed-mark { font-family: var(--font-display); font-size: 100px; color: var(--color-iris-violet); line-height: 1; opacity: 0.4; margin-bottom: 16px; display: block; }
+  .creed-mark {
+    font-family: var(--font-display);
+    font-size: 100px;
+    color: var(--color-iris-violet);
+    line-height: 1;
+    opacity: 0.4;
+    margin-bottom: 16px;
+    display: block;
+  }
 
-  .creed-cta { padding: 64px 0; text-align: center; }
-  .creed-cta h2 { font-family: var(--font-display); font-size: clamp(28px, 3.5vw, 40px); font-weight: 400; color: var(--color-white); margin-bottom: 12px; letter-spacing: -0.02em; }
-  .creed-cta p { color: var(--color-ash-gray); margin-bottom: 28px; font-size: 16px; }
+  .creed-cta {
+    padding: 64px 0;
+    text-align: center;
+  }
+  .creed-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 400;
+    color: var(--color-white);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .creed-cta p {
+    color: var(--color-ash-gray);
+    margin-bottom: 28px;
+    font-size: 16px;
+  }
 
+  /* ============ FOOTER ============ */
   footer { padding: 32px 0; }
-  .footer-inner { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 12px; color: var(--color-ash-gray); }
-  .footer-inner a { color: var(--color-ash-gray); text-decoration: none; margin-left: 20px; transition: color 150ms ease-out; }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ash-gray);
+  }
+  .footer-inner a {
+    color: var(--color-ash-gray);
+    text-decoration: none;
+    margin-left: 20px;
+    transition: color 150ms ease-out;
+  }
   .footer-inner a:hover { color: var(--color-white); }
 
+  /* ============ RESPONSIVE ============ */
   @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
     .hero-visual { max-width: 400px; margin: 0 auto; width: 100%; }
@@ -329,13 +949,12 @@
     .manifesto-item { grid-template-columns: 1fr; gap: 10px; }
     .creed { padding: 72px 0; }
     .creed-mark { font-size: 72px; }
-    #cdek-map { height: 400px; }
-    .cdek-map-wrap { min-height: 400px; }
   }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="container nav-inner">
     <div class="nav-left">
@@ -351,6 +970,7 @@
   </div>
 </nav>
 
+<!-- SIDEBAR MENU -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar" id="sidebar" aria-hidden="true">
   <div class="sidebar-head">
@@ -364,7 +984,6 @@
     <li><button data-nav="home" data-scroll="services">Услуги <span class="chev">→</span></button></li>
     <li><button data-nav="home" data-scroll="process">Как мы работаем <span class="chev">→</span></button></li>
     <li><button data-nav="home" data-scroll="contact">Контакты <span class="chev">→</span></button></li>
-    <li><button data-nav="home" data-scroll="cdek-section">Доставка СДЭК <span class="chev">→</span></button></li>
     <li><button data-nav="philosophy">Философия барбершопа <span class="chev">→</span></button></li>
   </ul>
   <div class="sidebar-footer">
@@ -373,8 +992,10 @@
   </div>
 </aside>
 
+<!-- ============ MAIN PAGE ============ -->
 <main class="page active" id="page-home">
 
+  <!-- HERO -->
   <header class="hero">
     <div class="container hero-grid">
       <div>
@@ -400,6 +1021,7 @@
     </div>
   </header>
 
+  <!-- SERVICES -->
   <section id="services">
     <div class="container">
       <div class="section-head">
@@ -407,10 +1029,17 @@
         <h2 class="section-title">Полный комплекс<br>мужского ухода</h2>
         <p class="section-desc">Три направления — волосы, борода и кожа лица. Каждая услуга построена на классических техниках и внимании к деталям.</p>
       </div>
+
       <div class="services-grid">
         <div class="service-card">
           <div class="service-icon">
-            <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M 8.12 8.12 L 20 20"/><path d="M 15.89 8.11 L 8.12 15.88"/><path d="M 18 4 L 8.12 13.88"/></svg>
+            <svg viewBox="0 0 24 24">
+              <circle cx="6" cy="6" r="3"/>
+              <circle cx="6" cy="18" r="3"/>
+              <path d="M 8.12 8.12 L 20 20"/>
+              <path d="M 15.89 8.11 L 8.12 15.88"/>
+              <path d="M 18 4 L 8.12 13.88"/>
+            </svg>
           </div>
           <h3>Стрижки</h3>
           <p>Классические и современные мужские стрижки. Работа ножницами и машинкой, точная геометрия линий.</p>
@@ -421,9 +1050,15 @@
             <li><span class="name">Детская (до 12 лет)</span><span class="price">1 400 ₽</span></li>
           </ul>
         </div>
+
         <div class="service-card">
           <div class="service-icon">
-            <svg viewBox="0 0 24 24"><path d="M 4 10 C 4 10 6 8 8 9 C 9 9.5 10 10 12 10 C 14 10 15 9.5 16 9 C 18 8 20 10 20 10"/><path d="M 5 12 C 5 16 7 20 12 21 C 17 20 19 16 19 12"/><path d="M 9 14 C 9.5 15 10.5 15 12 15 C 13.5 15 14.5 15 15 14"/><path d="M 10 17 C 10.5 18 11.5 18 12 18 C 12.5 18 13.5 18 14 17"/></svg>
+            <svg viewBox="0 0 24 24">
+              <path d="M 4 10 C 4 10 6 8 8 9 C 9 9.5 10 10 12 10 C 14 10 15 9.5 16 9 C 18 8 20 10 20 10"/>
+              <path d="M 5 12 C 5 16 7 20 12 21 C 17 20 19 16 19 12"/>
+              <path d="M 9 14 C 9.5 15 10.5 15 12 15 C 13.5 15 14.5 15 15 14"/>
+              <path d="M 10 17 C 10.5 18 11.5 18 12 18 C 12.5 18 13.5 18 14 17"/>
+            </svg>
           </div>
           <h3>Борода</h3>
           <p>Оформление, моделирование и уход. Подчёркиваем естественную линию, работаем с любой длиной и типом волоса.</p>
@@ -434,9 +1069,15 @@
             <li><span class="name">Окрашивание бороды</span><span class="price">1 600 ₽</span></li>
           </ul>
         </div>
+
         <div class="service-card">
           <div class="service-icon">
-            <svg viewBox="0 0 24 24"><path d="M 3 14 L 10 14 L 10 18 L 3 18 Z"/><path d="M 10 16 L 21 10 L 21 14 L 10 18 Z"/><circle cx="10" cy="16" r="1" fill="currentColor" stroke="none"/><line x1="12" y1="14.5" x2="19" y2="11" stroke-width="0.8"/></svg>
+            <svg viewBox="0 0 24 24">
+              <path d="M 3 14 L 10 14 L 10 18 L 3 18 Z"/>
+              <path d="M 10 16 L 21 10 L 21 14 L 10 18 Z"/>
+              <circle cx="10" cy="16" r="1" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="14.5" x2="19" y2="11" stroke-width="0.8"/>
+            </svg>
           </div>
           <h3>Бритьё и уход</h3>
           <p>Королевское бритьё опасной бритвой, горячие полотенца, уход за кожей лица. Ритуал, а не процедура.</p>
@@ -451,6 +1092,7 @@
     </div>
   </section>
 
+  <!-- PROCESS -->
   <section id="process">
     <div class="container">
       <div class="section-head">
@@ -458,15 +1100,29 @@
         <h2 class="section-title">Четыре шага<br>до результата</h2>
         <p class="section-desc">Прозрачный процесс — от записи до выхода из кресла. Никакой суеты, только точность и внимание.</p>
       </div>
+
       <div class="process-grid">
-        <div class="process-step"><h4>Запись</h4><p>Оставьте заявку на сайте или позвоните. Подберём удобное время и мастера под вашу задачу.</p></div>
-        <div class="process-step"><h4>Консультация</h4><p>Обсуждаем форму, длину и стиль. Барбер предлагает варианты с учётом формы лица и структуры волос.</p></div>
-        <div class="process-step"><h4>Работа</h4><p>Классические техники, острые инструменты, проверенная косметика. Без спешки и компромиссов.</p></div>
-        <div class="process-step"><h4>Результат</h4><p>Финальная укладка, рекомендации по домашнему уходу и чашка кофе — в подарок к визиту.</p></div>
+        <div class="process-step">
+          <h4>Запись</h4>
+          <p>Оставьте заявку на сайте или позвоните. Подберём удобное время и мастера под вашу задачу.</p>
+        </div>
+        <div class="process-step">
+          <h4>Консультация</h4>
+          <p>Обсуждаем форму, длину и стиль. Барбер предлагает варианты с учётом формы лица и структуры волос.</p>
+        </div>
+        <div class="process-step">
+          <h4>Работа</h4>
+          <p>Классические техники, острые инструменты, проверенная косметика. Без спешки и компромиссов.</p>
+        </div>
+        <div class="process-step">
+          <h4>Результат</h4>
+          <p>Финальная укладка, рекомендации по домашнему уходу и чашка кофе — в подарок к визиту.</p>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- CONTACT -->
   <section id="contact">
     <div class="container">
       <div class="section-head">
@@ -474,35 +1130,83 @@
         <h2 class="section-title">Записаться<br>на стрижку</h2>
         <p class="section-desc">Заполните форму — мы перезвоним в течение 15 минут и подтвердим запись.</p>
       </div>
+
       <div class="contact-grid">
         <div class="contact-info">
           <h3>Найдите нас</h3>
           <p>Уютное пространство в центре города. Работаем без выходных.</p>
           <ul class="contact-list">
-            <li><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><div><div class="lbl">Адрес</div><div class="val">ул. Тверская, 12, 2 этаж</div></div></li>
-            <li><div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div class="lbl">Телефон</div><div class="val"><a href="tel:+74951234567">+7 (495) 123-45-67</a></div></div></li>
-            <li><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><div class="lbl">Часы работы</div><div class="val">Ежедневно · 10:00 — 22:00</div></div></li>
-            <li><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></div><div><div class="lbl">Email</div><div class="val"><a href="mailto:hello@blade.co">hello@blade.co</a></div></div></li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+              <div>
+                <div class="lbl">Адрес</div>
+                <div class="val">ул. Тверская, 12, 2 этаж</div>
+              </div>
+            </li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div>
+                <div class="lbl">Телефон</div>
+                <div class="val"><a href="tel:+74951234567">+7 (495) 123-45-67</a></div>
+              </div>
+            </li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+              <div>
+                <div class="lbl">Часы работы</div>
+                <div class="val">Ежедневно · 10:00 — 22:00</div>
+              </div>
+            </li>
+            <li>
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></div>
+              <div>
+                <div class="lbl">Email</div>
+                <div class="val"><a href="mailto:hello@blade.co">hello@blade.co</a></div>
+              </div>
+            </li>
           </ul>
         </div>
+
         <form class="contact-form" id="bookingForm">
           <h3>Оставить заявку</h3>
           <p>Все поля обязательны. Мы свяжемся с вами для подтверждения.</p>
+
           <div class="form-row">
-            <div class="field"><label for="name">Имя</label><input id="name" type="text" placeholder="Александр" required></div>
-            <div class="field"><label for="phone">Телефон</label><input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required></div>
+            <div class="field">
+              <label for="name">Имя</label>
+              <input id="name" type="text" placeholder="Александр" required>
+            </div>
+            <div class="field">
+              <label for="phone">Телефон</label>
+              <input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required>
+            </div>
           </div>
+
           <div class="field">
             <label for="service">Услуга</label>
             <select id="service" required>
               <option value="">Выберите услугу</option>
-              <option>Классическая стрижка</option><option>Модельная стрижка</option><option>Моделирование бороды</option>
-              <option>Стрижка + борода</option><option>Классическое бритьё</option><option>Комплекс «Всё включено»</option>
+              <option>Классическая стрижка</option>
+              <option>Модельная стрижка</option>
+              <option>Моделирование бороды</option>
+              <option>Стрижка + борода</option>
+              <option>Классическое бритьё</option>
+              <option>Комплекс «Всё включено»</option>
             </select>
           </div>
-          <div class="field"><label for="comment">Комментарий</label><textarea id="comment" placeholder="Удобное время, пожелания к мастеру..."></textarea></div>
+
+          <div class="field">
+            <label for="comment">Комментарий</label>
+            <textarea id="comment" placeholder="Удобное время, пожелания к мастеру..."></textarea>
+          </div>
+
           <button type="submit" class="btn btn-primary form-submit" id="submitBtn">Отправить заявку <span class="chev">→</span></button>
-          <button type="button" class="btn form-submit" id="payOnlineBtn" style="margin-top: 12px; border-color: var(--color-iris-violet); color: var(--color-iris-violet);">💳 Оплатить онлайн <span class="chev">→</span></button>
+          
+          <!-- НОВАЯ КНОПКА ОПЛАТЫ (Добавлена без изменения остального дизайна) -->
+          <button type="button" class="btn form-submit" id="payOnlineBtn" style="margin-top: 12px; border-color: var(--color-iris-violet); color: var(--color-iris-violet);">
+            💳 Оплатить онлайн <span class="chev">→</span>
+          </button>
+          
           <div class="form-note">Нажимая кнопку, вы соглашаетесь с <span>политикой обработки данных</span></div>
           <div class="form-status" id="formStatus"></div>
         </form>
@@ -510,68 +1214,12 @@
     </div>
   </section>
 
-  <!-- CDEK DELIVERY SECTION -->
-  <section id="cdek-section">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-label">Логистика · СДЭК</div>
-        <h2 class="section-title">Доставка товаров<br>по всей России</h2>
-        <p class="section-desc">Отправляем фирменную косметику, аксессуары и подарочные сертификаты в любой пункт выдачи СДЭК. Выберите город и нужный ПВЗ прямо на карте.</p>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-info" style="padding: 32px;">
-          <h3 style="font-size: 22px; margin-bottom: 20px;">1. Выберите город</h3>
-          <div class="field">
-            <label for="cdek-city">Город получения</label>
-            <input id="cdek-city" type="text" placeholder="Начните вводить: Москва, Санкт-Петербург..." autocomplete="off">
-            <div id="cdek-city-suggestions" class="cdek-suggestions"></div>
-          </div>
-          <div id="cdek-selected-city" style="margin-top: 12px; font-family: var(--font-mono); font-size: 12px; color: var(--color-iris-violet); display: none;">
-            ✓ Выбран: <span id="cdek-city-name" style="color: var(--color-white);"></span>
-          </div>
-
-          <h3 style="font-size: 22px; margin-top: 32px; margin-bottom: 12px;">2. Пункт выдачи</h3>
-          <div class="field">
-            <label for="cdek-pvz-filter">Фильтр по адресу (необязательно)</label>
-            <input id="cdek-pvz-filter" type="text" placeholder="Улица или часть адреса" disabled>
-          </div>
-          <div id="cdek-pvz-list" class="pvz-list"></div>
-          <div id="cdek-selected-pvz" class="selected-pvz-card">
-            <div class="lbl">Выбранный ПВЗ</div>
-            <div class="name" id="cdek-pvz-name"></div>
-            <div class="addr" id="cdek-pvz-address"></div>
-            <div class="time" id="cdek-pvz-worktime"></div>
-          </div>
-
-          <h3 style="font-size: 22px; margin-top: 32px; margin-bottom: 12px;">3. Параметры посылки</h3>
-          <div class="field">
-            <label for="cdek-tariff">Тип доставки</label>
-            <select id="cdek-tariff">
-              <option value="136">Посылка склад-дверь</option>
-              <option value="137">Посылка склад-склад</option>
-              <option value="138">Магистральный экспресс</option>
-            </select>
-          </div>
-          <button id="cdek-calc-btn" class="btn btn-primary form-submit" disabled>Рассчитать стоимость <span class="chev">→</span></button>
-          <div id="cdek-calc-result" class="calc-result">
-            <div class="lbl">Стоимость доставки</div>
-            <div class="price"><span id="cdek-price">0</span> ₽</div>
-            <div class="days">Срок: <span id="cdek-days">0</span> дн.</div>
-          </div>
-          <button id="cdek-order-btn" class="btn form-submit" style="margin-top: 12px; border-color: var(--color-pulse-green); color: var(--color-pulse-green); display: none;">Оформить доставку <span class="chev">→</span></button>
-          <div id="cdek-order-status" class="cdek-order-status"></div>
-        </div>
-        <div class="cdek-map-wrap">
-          <div id="cdek-map-loader" class="map-loader">Загрузка карты...</div>
-          <div id="cdek-map"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>
 
+<!-- ============ PHILOSOPHY PAGE ============ -->
 <main class="page" id="page-philosophy">
+
+  <!-- HERO -->
   <header class="philosophy-hero">
     <div class="container">
       <div class="section-label">Манифест · 001</div>
@@ -579,6 +1227,8 @@
       <p class="lede">Барбершоп — это место, где время замедляется, а мужчина остаётся наедине с собой, зеркалом и мастером, который знает своё дело.</p>
     </div>
   </header>
+
+  <!-- MANIFESTO -->
   <section class="manifesto">
     <div class="container">
       <div class="manifesto-grid">
@@ -587,13 +1237,33 @@
           <p style="font-size:14px;color:var(--color-ash-gray);line-height:1.6;">То, во что мы верим. То, от чего не отступаем — ни в стрижке, ни в бритье, ни в разговоре у кресла.</p>
         </div>
         <div class="manifesto-items">
-          <div class="manifesto-item"><div class="num">01</div><div><h3>Эстетика — это <em>дисциплина</em>.</h3><p>Тренд приходит и уходит. Форма остаётся. Мы делаем то, что будет выглядеть достойно через месяц и через год.</p></div></div>
-          <div class="manifesto-item"><div class="num">02</div><div><h3>Бритьё — это <em>ритуал</em>.</h3><p>Горячее полотенце, тёплая пена, три прохода лезвием, холодный компресс и одеколон. Это 40 минут тишины — именно поэтому возвращаются снова.</p></div></div>
-          <div class="manifesto-item"><div class="num">03</div><div><h3>Мастер — это <em>ремесленник</em>.</h3><p>Пять лет ученичества — прежде чем получить собственное кресло. Мы не называем себя «топ-мастерами» — мы просто хорошо делаем свою работу.</p></div></div>
+          <div class="manifesto-item">
+            <div class="num">01</div>
+            <div>
+              <h3>Эстетика — это <em>дисциплина</em>.</h3>
+              <p>Тренд приходит и уходит. Форма остаётся. Мы делаем то, что будет выглядеть достойно через месяц и через год.</p>
+            </div>
+          </div>
+          <div class="manifesto-item">
+            <div class="num">02</div>
+            <div>
+              <h3>Бритьё — это <em>ритуал</em>.</h3>
+              <p>Горячее полотенце, тёплая пена, три прохода лезвием, холодный компресс и одеколон. Это 40 минут тишины — именно поэтому возвращаются снова.</p>
+            </div>
+          </div>
+          <div class="manifesto-item">
+            <div class="num">03</div>
+            <div>
+              <h3>Мастер — это <em>ремесленник</em>.</h3>
+              <p>Пять лет ученичества — прежде чем получить собственное кресло. Мы не называем себя «топ-мастерами» — мы просто хорошо делаем свою работу.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- PRINCIPLES -->
   <section class="principles">
     <div class="container">
       <div class="section-head">
@@ -601,21 +1271,76 @@
         <h2 class="section-title">На чём<br>держится дом</h2>
         <p class="section-desc">Четыре слова, которые мы произносим вслух, когда принимаем нового мастера. Если что-то им противоречит — мы это не делаем.</p>
       </div>
+
       <div class="principles-grid">
-        <div class="principle"><div class="principle-icon"><svg viewBox="0 0 24 24"><path d="M 3 7 L 21 7 L 21 17 L 3 17 Z"/><path d="M 7 7 L 7 11"/><path d="M 11 7 L 11 13"/><path d="M 15 7 L 15 11"/><path d="M 19 7 L 19 13"/></svg></div><div class="num">Принцип 01</div><h3>Чёткость</h3><p>Линия есть линия. Никаких «почти» и «сойдёт». Если контур не идеален — переделываем.</p></div>
-        <div class="principle"><div class="principle-icon"><svg viewBox="0 0 24 24"><path d="M 4 4 L 12 6 L 12 20 L 4 18 Z"/><path d="M 20 4 L 12 6 L 12 20 L 20 18 Z"/><path d="M 4 4 L 12 2 L 20 4"/></svg></div><div class="num">Принцип 02</div><h3>Традиция</h3><p>Классическая стрижка, классическое бритьё, классические инструменты. Учимся у мастеров, а не у трендов.</p></div>
-        <div class="principle"><div class="principle-icon"><svg viewBox="0 0 24 24"><path d="M 2 12 C 5 6 10 5 12 5 C 14 5 19 6 22 12 C 19 18 14 19 12 19 C 10 19 5 18 2 12 Z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="num">Принцип 03</div><h3>Внимание</h3><p>Смотрим на форму черепа, направление роста волос, на то, как мужчина держит плечи. Стрижка должна работать в жизни.</p></div>
-        <div class="principle"><div class="principle-icon"><svg viewBox="0 0 24 24"><path d="M 12 2 C 12 2 7 8 7 13 C 7 16.5 9.5 19 12 19 C 14.5 19 17 16.5 17 13 C 17 8 12 2 12 2 Z"/><path d="M 12 11 C 12 11 10 13 10 15 C 10 16.5 11 17.5 12 17.5 C 13 17.5 14 16.5 14 15 C 14 13 12 11 12 11 Z"/></svg></div><div class="num">Принцип 04</div><h3>Ритуал</h3><p>Каждое движение — последовательность, отточенная годами. Это не суета. Это медитация. Клиент это чувствует.</p></div>
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 3 7 L 21 7 L 21 17 L 3 17 Z"/>
+              <path d="M 7 7 L 7 11"/>
+              <path d="M 11 7 L 11 13"/>
+              <path d="M 15 7 L 15 11"/>
+              <path d="M 19 7 L 19 13"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 01</div>
+          <h3>Чёткость</h3>
+          <p>Линия есть линия. Никаких «почти» и «сойдёт». Если контур не идеален — переделываем.</p>
+        </div>
+
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 4 4 L 12 6 L 12 20 L 4 18 Z"/>
+              <path d="M 20 4 L 12 6 L 12 20 L 20 18 Z"/>
+              <path d="M 4 4 L 12 2 L 20 4"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 02</div>
+          <h3>Традиция</h3>
+          <p>Классическая стрижка, классическое бритьё, классические инструменты. Учимся у мастеров, а не у трендов.</p>
+        </div>
+
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 2 12 C 5 6 10 5 12 5 C 14 5 19 6 22 12 C 19 18 14 19 12 19 C 10 19 5 18 2 12 Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 03</div>
+          <h3>Внимание</h3>
+          <p>Смотрим на форму черепа, направление роста волос, на то, как мужчина держит плечи. Стрижка должна работать в жизни.</p>
+        </div>
+
+        <div class="principle">
+          <div class="principle-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M 12 2 C 12 2 7 8 7 13 C 7 16.5 9.5 19 12 19 C 14.5 19 17 16.5 17 13 C 17 8 12 2 12 2 Z"/>
+              <path d="M 12 11 C 12 11 10 13 10 15 C 10 16.5 11 17.5 12 17.5 C 13 17.5 14 16.5 14 15 C 14 13 12 11 12 11 Z"/>
+            </svg>
+          </div>
+          <div class="num">Принцип 04</div>
+          <h3>Ритуал</h3>
+          <p>Каждое движение — последовательность, отточенная годами. Это не суета. Это медитация. Клиент это чувствует.</p>
+        </div>
       </div>
     </div>
   </section>
+
+  <!-- CREED QUOTE -->
   <section class="creed">
     <div class="container">
       <span class="creed-mark">"</span>
-      <blockquote class="creed-quote">Хорошая стрижка — та, которую <em>не замечают</em>.<br>Замечают только плохую.</blockquote>
+      <blockquote class="creed-quote">
+        Хорошая стрижка — та, которую <em>не замечают</em>.<br>
+        Замечают только плохую.
+      </blockquote>
       <div class="creed-author">— принцип <span>blade &amp; co.</span></div>
     </div>
   </section>
+
+  <!-- CTA -->
   <section class="creed-cta">
     <div class="container">
       <h2>Проверим на себе?</h2>
@@ -623,422 +1348,329 @@
       <button class="btn btn-primary" data-nav="home" data-scroll="contact">Записаться в барбершоп <span class="chev">→</span></button>
     </div>
   </section>
+
 </main>
 
+<!-- FOOTER -->
 <footer>
   <div class="container footer-inner">
     <div>© 2025 BLADE &amp; CO. — барбершоп</div>
-    <div><a href="#">Политика</a><a href="#">Условия</a></div>
+    <div>
+      <a href="#">Политика</a>
+      <a href="#">Условия</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  // ==========================================
-  // КОНФИГУРАЦИЯ
-  // ==========================================
-  const CDEK_WORKER_URL = 'https://cdek11.aroslavrazzivin.workers.dev/';
-  const YANDEX_MAPS_API_KEY = '964f6a11-7ee5-488a-8f87-a9e765871369';
-  const CDEK_SENDER_CITY_CODE = 21; // Код города отправления
-
-  // ==========================================
-  // SIDEBAR MENU & NAVIGATION
-  // ==========================================
+  // ============ SIDEBAR MENU ============
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const sidebar = document.getElementById('sidebar');
   const sidebarOverlay = document.getElementById('sidebarOverlay');
   const sidebarClose = document.getElementById('sidebarClose');
 
   function openMenu() {
-    sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); hamburgerBtn.classList.add('open');
-    document.body.classList.add('menu-open'); sidebar.setAttribute('aria-hidden', 'false');
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('open');
+    hamburgerBtn.classList.add('open');
+    document.body.classList.add('menu-open');
+    sidebar.setAttribute('aria-hidden', 'false');
   }
   function closeMenu() {
-    sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); hamburgerBtn.classList.remove('open');
-    document.body.classList.remove('menu-open'); sidebar.setAttribute('aria-hidden', 'true');
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('open');
+    hamburgerBtn.classList.remove('open');
+    document.body.classList.remove('menu-open');
+    sidebar.setAttribute('aria-hidden', 'true');
   }
-  hamburgerBtn.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeMenu(); else openMenu(); });
+
+  hamburgerBtn.addEventListener('click', () => {
+    if (sidebar.classList.contains('open')) closeMenu();
+    else openMenu();
+  });
   sidebarOverlay.addEventListener('click', closeMenu);
   sidebarClose.addEventListener('click', closeMenu);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sidebar.classList.contains('open')) closeMenu(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) closeMenu();
+  });
 
-  const pages = { home: document.getElementById('page-home'), philosophy: document.getElementById('page-philosophy') };
+  // ============ PAGE NAVIGATION ============
+  const pages = {
+    home: document.getElementById('page-home'),
+    philosophy: document.getElementById('page-philosophy')
+  };
+
   function navigateTo(pageName, scrollTo) {
     Object.values(pages).forEach(p => p.classList.remove('active'));
     pages[pageName].classList.add('active');
     closeMenu();
     window.scrollTo({ top: 0, behavior: 'instant' });
+
     if (scrollTo) {
-      requestAnimationFrame(() => { setTimeout(() => { const target = document.getElementById(scrollTo); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); });
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const target = document.getElementById(scrollTo);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      });
     }
+
     if (pageName === 'philosophy') history.replaceState(null, '', '#philosophy');
     else history.replaceState(null, '', window.location.pathname);
   }
+
   document.querySelectorAll('[data-nav]').forEach(el => {
-    el.addEventListener('click', (e) => { e.preventDefault(); navigateTo(el.getAttribute('data-nav'), el.getAttribute('data-scroll')); });
-  });
-  document.querySelectorAll('.logo').forEach(el => { el.addEventListener('click', (e) => { e.preventDefault(); navigateTo('home'); }); });
-
-  // ==========================================
-  // TELEGRAM + EMAIL + YOOKASSA + PHONE MASK
-  // ==========================================
-  const BOT_TOKEN = '8915636720:AAE_4F6yyEHTVqqdsO0a5bmcAJ8gpS8Ospo';
-  const CHAT_ID = '-1003956279499';
-  const EMAIL = 'aroslavrazzivin@gmail.com';
-  const WORKER_URL = 'https://yookassa-payment.aroslavrazzivin.workers.dev/';
-  const SITE_URL = 'https://love2009-hub.github.io/blade-co/';
-
-  const bookingForm = document.getElementById('bookingForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const formStatus = document.getElementById('formStatus');
-
-  function showStatus(message, type) { formStatus.textContent = message; formStatus.className = 'form-status ' + type; }
-
-  const phoneInputField = document.getElementById('phone');
-  const formatPhoneValue = (value) => {
-    let cleaned = ('' + value).replace(/\D/g, '');
-    if (cleaned.length > 0 && cleaned[0] === '8') cleaned = '7' + cleaned.substring(1);
-    if (cleaned.length > 0 && cleaned[0] !== '7') cleaned = '7' + cleaned;
-    let formatted = '+7';
-    if (cleaned.length > 1) formatted += ' (' + cleaned.substring(1, 4);
-    if (cleaned.length >= 5) formatted += ') ' + cleaned.substring(4, 7);
-    if (cleaned.length >= 8) formatted += '-' + cleaned.substring(7, 9);
-    if (cleaned.length >= 10) formatted += '-' + cleaned.substring(9, 11);
-    return formatted;
-  };
-  if (phoneInputField) {
-    phoneInputField.addEventListener('input', (e) => {
-      const input = e.target; const cursorPosition = input.selectionStart; const oldValue = input.value; const newValue = formatPhoneValue(input.value);
-      if (newValue !== oldValue) {
-        input.value = newValue;
-        if (cursorPosition === oldValue.length) input.setSelectionRange(newValue.length, newValue.length);
-        else input.setSelectionRange(cursorPosition, cursorPosition);
-      }
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = el.getAttribute('data-nav');
+      const scroll = el.getAttribute('data-scroll');
+      navigateTo(page, scroll);
     });
-    phoneInputField.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && e.target.value.length <= 3) e.preventDefault(); });
-    phoneInputField.addEventListener('focus', (e) => { if (!e.target.value) { e.target.value = '+7'; e.target.setSelectionRange(3, 3); } });
-  }
-
-  bookingForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const service = document.getElementById('service').value;
-    const comment = document.getElementById('comment').value.trim();
-    if (!name || !phone || !service) { showStatus('⚠ Заполните все обязательные поля', 'error'); return; }
-
-    const originalBtn = submitBtn.innerHTML;
-    submitBtn.disabled = true; submitBtn.innerHTML = 'Отправка...'; formStatus.className = 'form-status';
-    const now = new Date();
-    const dateStr = now.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-    const formData = new FormData();
-    formData.append('Имя', name); formData.append('Телефон', phone); formData.append('Услуга', service);
-    formData.append('Комментарий', comment || '—'); formData.append('Дата', dateStr);
-    formData.append('_subject', `💈 Новая заявка — BLADE & CO. от ${name}`); formData.append('_captcha', 'false');
-
-    const tgMessage = `<b>💈 Новая заявка — BLADE &amp; CO.</b>\n\n<b>👤 Имя:</b> ${escapeHtml(name)}\n<b>📱 Телефон:</b> ${escapeHtml(phone)}\n<b>✂️ Услуга:</b> ${escapeHtml(service)}\n<b>💬 Комментарий:</b> ${comment ? escapeHtml(comment) : '—'}\n\n<i>🕐 ${dateStr}</i>`;
-
-    try {
-      const [emailRes, tgRes] = await Promise.all([
-        fetch(`https://formsubmit.co/ajax/${EMAIL}`, { method: 'POST', body: formData }),
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: tgMessage, parse_mode: 'HTML' }) })
-      ]);
-      const emailData = await emailRes.json(); const tgData = await tgRes.json();
-      if (emailData.success === 'success' && tgData.ok) {
-        showStatus('✓ Заявка отправлена. Мы перезвоним в течение 15 минут.', 'success');
-        bookingForm.reset(); submitBtn.innerHTML = '✓ Отправлено';
-        setTimeout(() => { submitBtn.innerHTML = originalBtn; submitBtn.disabled = false; }, 3000);
-      } else { throw new Error('Ошибка отправки'); }
-    } catch (err) {
-      showStatus('⚠ Не удалось отправить заявку. Позвоните нам: +7 (495) 123-45-67', 'error');
-      submitBtn.innerHTML = originalBtn; submitBtn.disabled = false;
-    }
   });
 
-  const payOnlineBtn = document.getElementById('payOnlineBtn');
-  if (payOnlineBtn) {
-    payOnlineBtn.addEventListener('click', async () => {
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const service = document.getElementById('service').value;
-      if (!name || !phone || !service) { showStatus('⚠ Заполните имя, телефон и выберите услугу для оплаты', 'error'); return; }
-      const prices = { 'Классическая стрижка': '1800.00', 'Модельная стрижка': '2400.00', 'Стрижка + укладка': '2900.00', 'Детская (до 12 лет)': '1400.00', 'Моделирование бороды': '1200.00', 'Стрижка + борода': '2800.00', 'Коррекция контура': '800.00', 'Окрашивание бороды': '1600.00', 'Классическое бритьё': '1800.00', 'Бритьё + уход за лицом': '2400.00', 'Чёрная маска для лица': '700.00', 'Комплекс «Всё включено»': '4500.00' };
-      const amount = prices[service] || '1000.00';
-      const description = `Запись: ${service} (${name})`;
-      const returnUrl = `${SITE_URL}#contact?payment=success`;
-      payOnlineBtn.disabled = true; payOnlineBtn.innerHTML = 'Создание ссылки на оплату...';
-      try {
-        const response = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount, description, return_url: returnUrl }) });
-        const data = await response.json();
-        if (data.confirmation_url) {
-          showStatus('✓ Перенаправление на страницу оплаты ЮKassa...', 'success');
-          setTimeout(() => { window.location.href = data.confirmation_url; }, 1000);
-        } else { throw new Error(data.error || 'Не удалось создать платеж'); }
-      } catch (err) {
-        showStatus('⚠ Ошибка при создании платежа.', 'error');
-        payOnlineBtn.disabled = false; payOnlineBtn.innerHTML = '💳 Оплатить онлайн <span class="chev">→</span>';
-      }
+  document.querySelectorAll('.logo').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('home');
     });
-  }
-
-  function escapeHtml(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
-
-  // ==========================================
-  // СДЭК + ЯНДЕКС КАРТЫ (ОБНОВЛЕННАЯ ЛОГИКА)
-  // ==========================================
-  let cdekMap = null;
-  let cdekObjectManager = null;
-  let selectedPvz = null;
-  let currentCityCode = null;
-  let currentCityName = null;
-  let allPvzData = [];
-  let searchCitiesTimeout = null;
-
-  function initCdekMap() {
-    if (typeof ymaps !== 'undefined') return;
-    const script = document.createElement('script');
-    script.src = `https://api-maps.yandex.ru/2.1/?apikey=${YANDEX_MAPS_API_KEY}&lang=ru_RU`;
-    script.onload = () => {
-      ymaps.ready(() => {
-        cdekMap = new ymaps.Map('cdek-map', { center: [55.751574, 37.573856], zoom: 10, controls: ['zoomControl'] });
-        
-        // Включаем кластеризацию для отображения всех ПВЗ без перегрузки карты
-        cdekObjectManager = new ymaps.ObjectManager({ 
-          clusterize: true, 
-          gridSize: 32, 
-          clusterDisableClickZoom: false 
-        });
-        cdekObjectManager.clusters.options.set({ preset: 'islands#invertedVioletClusterIcons' });
-        cdekObjectManager.objects.options.set({ preset: 'islands#violetDotIcon' });
-        cdekMap.geoObjects.add(cdekObjectManager);
-
-        // Клик по маркеру на карте выбирает этот ПВЗ
-        cdekObjectManager.objects.events.add('click', function (e) {
-          const objectId = e.get('objectId');
-          const pvzData = cdekObjectManager.objects.getById(objectId).properties;
-          selectPvzByCode(pvzData.code);
-        });
-
-        document.getElementById('cdek-map-loader').style.display = 'none';
-      });
-    };
-    script.onerror = () => { document.getElementById('cdek-map-loader').textContent = 'Не удалось загрузить карту'; };
-    document.head.appendChild(script);
-  }
-
-  const cityInput = document.getElementById('cdek-city');
-  const suggestionsBox = document.getElementById('cdek-city-suggestions');
-  if (cityInput) {
-    cityInput.addEventListener('input', (e) => {
-      clearTimeout(searchCitiesTimeout);
-      const query = e.target.value.trim();
-      if (query.length < 2) { suggestionsBox.classList.remove('open'); return; }
-      searchCitiesTimeout = setTimeout(() => searchCities(query), 350);
-    });
-    cityInput.addEventListener('blur', () => { setTimeout(() => suggestionsBox.classList.remove('open'), 200); });
-  }
-
-  async function searchCities(query) {
-    try {
-      const res = await fetch(`${CDEK_WORKER_URL}/cities?city=${encodeURIComponent(query)}&size=15`);
-      const data = await res.json();
-      suggestionsBox.innerHTML = '';
-      if (data && Array.isArray(data) && data.length > 0) {
-        suggestionsBox.classList.add('open');
-        data.forEach(city => {
-          const div = document.createElement('div');
-          div.className = 'cdek-suggestion-item';
-          div.innerHTML = `${city.city}<span class="region">${city.region || ''}</span>`;
-          div.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            cityInput.value = city.city;
-            currentCityCode = city.code;
-            currentCityName = city.city;
-            suggestionsBox.classList.remove('open');
-            document.getElementById('cdek-selected-city').style.display = 'block';
-            document.getElementById('cdek-city-name').textContent = `${city.city}, ${city.region || ''}`;
-            document.getElementById('cdek-pvz-filter').disabled = false;
-            loadPvzForCity(city.code, city.city);
-          });
-          suggestionsBox.appendChild(div);
-        });
-      } else { suggestionsBox.classList.remove('open'); }
-    } catch (err) { console.error('Ошибка поиска городов:', err); }
-  }
-
-  async function loadPvzForCity(cityCode, cityName) {
-    if (!cdekMap) return;
-    const pvzList = document.getElementById('cdek-pvz-list');
-    pvzList.innerHTML = '<div style="padding: 14px; color: var(--color-ash-gray); font-size: 13px;">Загрузка всех пунктов выдачи...</div>';
-    pvzList.classList.add('open');
-    try {
-      // Запрашиваем ВСЕ ПВЗ в городе без дополнительных фильтров
-      const res = await fetch(`${CDEK_WORKER_URL}/pvz?city_code=${cityCode}`);
-      const data = await res.json();
-      allPvzData = Array.isArray(data) ? data : [];
-      renderPvzList(allPvzData);
-      renderPvzOnMap(allPvzData);
-      
-      if (allPvzData.length > 0 && allPvzData[0].location) {
-        cdekMap.setCenter([parseFloat(allPvzData[0].location.latitude), parseFloat(allPvzData[0].location.longitude)], 11);
-      }
-    } catch (err) {
-      console.error('Ошибка загрузки ПВЗ:', err);
-      pvzList.innerHTML = '<div style="padding: 14px; color: var(--color-alarm-red); font-size: 13px;">Ошибка загрузки. Попробуйте позже.</div>';
-    }
-  }
-
-  const pvzFilter = document.getElementById('cdek-pvz-filter');
-  if (pvzFilter) {
-    pvzFilter.addEventListener('input', (e) => {
-      const query = e.target.value.trim().toLowerCase();
-      const filtered = allPvzData.filter(p => !query || (p.address && p.address.toLowerCase().includes(query)) || (p.name && p.name.toLowerCase().includes(query)));
-      renderPvzList(filtered);
-    });
-  }
-
-  function renderPvzList(pvzList) {
-    const container = document.getElementById('cdek-pvz-list');
-    container.innerHTML = '';
-    if (pvzList.length === 0) { container.innerHTML = '<div style="padding: 14px; color: var(--color-ash-gray); font-size: 13px;">ПВЗ не найдены</div>'; return; }
-    
-    // Ограничиваем список 50 элементами для производительности UI, но на карте будут ВСЕ
-    pvzList.slice(0, 50).forEach(pvz => {
-      const div = document.createElement('div');
-      div.className = 'pvz-item' + (selectedPvz && selectedPvz.code === pvz.code ? ' selected' : '');
-      const workTime = pvz.work_time && pvz.work_time.length > 0 ? `Пн-Пт: ${pvz.work_time[0].time_start || ''}-${pvz.work_time[0].time_stop || ''}` : '';
-      div.innerHTML = `<div class="pvz-name">${pvz.name || 'ПВЗ ' + pvz.code}</div><div class="pvz-addr">${pvz.address || ''}</div><div class="pvz-time">${workTime}</div>`;
-      div.addEventListener('click', () => selectPvzByCode(pvz.code));
-      container.appendChild(div);
-    });
-  }
-
-  function renderPvzOnMap(pvzList) {
-    if (!cdekObjectManager) return;
-    cdekObjectManager.removeAll();
-    
-    // Добавляем ВСЕ ПВЗ на карту
-    const features = pvzList.filter(p => p.location && p.location.latitude && p.location.longitude).map(pvz => ({
-      type: 'Feature', id: pvz.code,
-      geometry: { type: 'Point', coordinates: [parseFloat(pvz.location.latitude), parseFloat(pvz.location.longitude)] },
-      properties: { code: pvz.code, name: pvz.name || 'ПВЗ ' + pvz.code, address: pvz.address || '', hintContent: pvz.name || 'ПВЗ' }
-    }));
-    cdekObjectManager.add({ type: 'FeatureCollection', features });
-  }
-
-  function selectPvzByCode(code) {
-    const pvz = allPvzData.find(p => p.code === code);
-    if (!pvz) return;
-    
-    selectedPvz = pvz;
-    
-    // Обновляем карточку выбранного ПВЗ
-    const card = document.getElementById('cdek-selected-pvz');
-    card.classList.add('open');
-    document.getElementById('cdek-pvz-name').textContent = pvz.name || 'ПВЗ ' + pvz.code;
-    document.getElementById('cdek-pvz-address').textContent = pvz.address || '';
-    const workTime = pvz.work_time && pvz.work_time.length > 0 ? `Пн-Пт: ${pvz.work_time[0].time_start || ''}-${pvz.work_time[0].time_stop || ''}` : '';
-    document.getElementById('cdek-pvz-worktime').textContent = workTime;
-    
-    // Разрешаем расчет
-    document.getElementById('cdek-calc-btn').disabled = false;
-    
-    // Подсветка в списке
-    document.querySelectorAll('.pvz-item').forEach(el => el.classList.remove('selected'));
-    document.querySelectorAll('.pvz-item').forEach(el => { 
-      if (el.querySelector('.pvz-name')?.textContent === (pvz.name || 'ПВЗ ' + pvz.code)) {
-        el.classList.add('selected');
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } 
-    });
-    
-    // Центрируем карту на выбранном ПВЗ
-    if (cdekMap && pvz.location) {
-      cdekMap.setCenter([parseFloat(pvz.location.latitude), parseFloat(pvz.location.longitude)], 15);
-    }
-  }
-
-  const calcBtn = document.getElementById('cdek-calc-btn');
-  if (calcBtn) {
-    calcBtn.addEventListener('click', async () => {
-      if (!selectedPvz || !currentCityCode) return;
-      const btn = calcBtn; btn.innerHTML = 'Расчет...'; btn.disabled = true;
-      
-      const tariffCode = parseInt(document.getElementById('cdek-tariff').value);
-      
-      // Вес жестко задан как 1000 грамм (1 кг), так как поле ввода удалено
-      const payload = {
-        type: 1, tariff_code: tariffCode,
-        from_location: { code: CDEK_SENDER_CITY_CODE },
-        to_location: { code: currentCityCode },
-        packages: [{ weight: 1000, length: 20, width: 20, height: 10 }]
-      };
-      
-      try {
-        const res = await fetch(`${CDEK_WORKER_URL}/calculator`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        const data = await res.json();
-        if (data && data.delivery_sum) {
-          document.getElementById('cdek-calc-result').classList.add('open');
-          document.getElementById('cdek-price').textContent = data.delivery_sum.toLocaleString('ru-RU');
-          document.getElementById('cdek-days').textContent = `${data.period_min || '?'}-${data.period_max || '?'}`;
-          document.getElementById('cdek-order-btn').style.display = 'flex';
-        } else if (data && data.tariff_codes && data.tariff_codes.length > 0) {
-          const tariff = data.tariff_codes[0];
-          document.getElementById('cdek-calc-result').classList.add('open');
-          document.getElementById('cdek-price').textContent = (tariff.delivery_sum || tariff.total_sum || 0).toLocaleString('ru-RU');
-          document.getElementById('cdek-days').textContent = `${tariff.period_min || '?'}-${tariff.period_max || '?'}`;
-          document.getElementById('cdek-order-btn').style.display = 'flex';
-        } else { alert('Не удалось рассчитать стоимость. Ответ: ' + JSON.stringify(data)); }
-      } catch (err) { console.error('Ошибка расчета:', err); alert('Ошибка соединения с сервером.'); }
-      finally { btn.innerHTML = 'Рассчитать стоимость <span class="chev">→</span>'; btn.disabled = false; }
-    });
-  }
-
-  const orderBtn = document.getElementById('cdek-order-btn');
-  const orderStatus = document.getElementById('cdek-order-status');
-  if (orderBtn) {
-    orderBtn.addEventListener('click', async () => {
-      const btn = orderBtn; btn.innerHTML = 'Оформление...'; btn.disabled = true;
-      orderStatus.classList.add('open'); orderStatus.textContent = 'Создание заказа в СДЭК...';
-      
-      const tariffCode = parseInt(document.getElementById('cdek-tariff').value);
-      
-      const orderData = {
-        type: 1, number: `BLADE-${Date.now()}`, tariff_code: tariffCode, comment: 'Доставка из BLADE & CO.',
-        sender: { name: 'BLADE & CO.', phones: [{ number: '+74951234567' }], address: { city_code: CDEK_SENDER_CITY_CODE, address: 'ул. Тверская, 12' } },
-        recipient: { name: 'Клиент', phones: [{ number: document.getElementById('phone').value.replace(/\D/g, '') || '79000000000' }], address: { pvz_code: selectedPvz.code } },
-        packages: [{ number: `PKG-${Date.now()}`, weight: 1000, length: 20, width: 20, height: 10, comment: 'Косметика BLADE & CO.' }]
-      };
-      
-      try {
-        const res = await fetch(`${CDEK_WORKER_URL}/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orders: [orderData] }) });
-        const data = await res.json();
-        if (data && data.entity && data.entity.uuid) {
-          const uuid = data.entity.uuid;
-          orderStatus.innerHTML = `✅ Заказ создан!<br>UUID: <span style="color: var(--color-iris-violet);">${uuid}</span><br><br>
-          <a href="${CDEK_WORKER_URL}/print/orders?orders=${uuid}&type=order" target="_blank">📄 Скачать накладную (PDF)</a> | 
-          <a href="${CDEK_WORKER_URL}/print/barcodes?orders=${uuid}" target="_blank">🏷️ Скачать штрихкоды (PDF)</a>`;
-          btn.style.display = 'none';
-        } else {
-          const errMsg = (data && (data.message || data.error)) || JSON.stringify(data);
-          orderStatus.innerHTML = `<span style="color: var(--color-alarm-red);">Ошибка: ${escapeHtml(errMsg)}</span>`;
-          btn.disabled = false; btn.innerHTML = 'Оформить доставку <span class="chev">→</span>';
-        }
-      } catch (err) {
-        orderStatus.innerHTML = `<span style="color: var(--color-alarm-red);">Ошибка сети: ${escapeHtml(err.message)}</span>`;
-        btn.disabled = false; btn.innerHTML = 'Оформить доставку <span class="chev">→</span>';
-      }
-    });
-  }
+  });
 
   window.addEventListener('DOMContentLoaded', () => {
-    initCdekMap();
+    if (window.location.hash === '#philosophy') navigateTo('philosophy');
+    
+    // Проверка успешного возврата от ЮKassa
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('payment') === 'success') {
       showStatus('✓ Оплата прошла успешно! Мы свяжемся с вами для подтверждения записи.', 'success');
       window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
     }
   });
+
+  // ============ TELEGRAM BOT & EMAIL INTEGRATION (БЕЗ ИЗМЕНЕНИЙ) ============
+  const BOT_TOKEN = '8915636720:AAE_4F6yyEHTVqqdsO0a5bmcAJ8gpS8Ospo';
+  const CHAT_ID = '-1003956279499';
+  const EMAIL = 'aroslavrazzivin@gmail.com';
+
+  const bookingForm = document.getElementById('bookingForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formStatus = document.getElementById('formStatus');
+
+  function showStatus(message, type) {
+    formStatus.textContent = message;
+    formStatus.className = 'form-status ' + type;
+  }
+
+  bookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const service = document.getElementById('service').value;
+    const comment = document.getElementById('comment').value.trim();
+
+    if (!name || !phone || !service) {
+      showStatus('⚠ Заполните все обязательные поля', 'error');
+      return;
+    }
+
+    const originalBtn = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Отправка...';
+    formStatus.className = 'form-status';
+
+    const now = new Date();
+    const dateStr = now.toLocaleString('ru-RU', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+
+    // 1. Подготовка данных для почты (FormSubmit)
+    const formData = new FormData();
+    formData.append('Имя', name);
+    formData.append('Телефон', phone);
+    formData.append('Услуга', service);
+    formData.append('Комментарий', comment || '—');
+    formData.append('Дата', dateStr);
+    formData.append('_subject', `💈 Новая заявка — BLADE & CO. от ${name}`);
+    formData.append('_captcha', 'false');
+
+    // 2. Подготовка данных для Telegram
+    const tgMessage =
+`<b>💈 Новая заявка — BLADE &amp; CO.</b>
+
+<b>👤 Имя:</b> ${escapeHtml(name)}
+<b>📱 Телефон:</b> ${escapeHtml(phone)}
+<b>✂️ Услуга:</b> ${escapeHtml(service)}
+<b>💬 Комментарий:</b> ${comment ? escapeHtml(comment) : '—'}
+
+<i>🕐 ${dateStr}</i>`;
+
+    try {
+      const [emailRes, tgRes] = await Promise.all([
+        fetch(`https://formsubmit.co/ajax/${EMAIL}`, { method: 'POST', body: formData }),
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: CHAT_ID, text: tgMessage, parse_mode: 'HTML' })
+        })
+      ]);
+
+      const emailData = await emailRes.json();
+      const tgData = await tgRes.json();
+
+      if (emailData.success === 'success' && tgData.ok) {
+        showStatus('✓ Заявка отправлена. Мы перезвоним в течение 15 минут.', 'success');
+        bookingForm.reset();
+        submitBtn.innerHTML = '✓ Отправлено';
+        setTimeout(() => {
+          submitBtn.innerHTML = originalBtn;
+          submitBtn.disabled = false;
+        }, 3000);
+      } else {
+        throw new Error('Ошибка отправки');
+      }
+    } catch (err) {
+      showStatus('⚠ Не удалось отправить заявку. Позвоните нам: +7 (495) 123-45-67', 'error');
+      submitBtn.innerHTML = originalBtn;
+      submitBtn.disabled = false;
+    }
+  });
+
+  // ============ YOOKASSA PAYMENT INTEGRATION (НОВОЕ) ============
+  const payOnlineBtn = document.getElementById('payOnlineBtn');
+  
+  // ВАШ URL CLOUDFLARE WORKER
+  const WORKER_URL = 'https://yookassa-payment.aroslavrazzivin.workers.dev/';
+  const SITE_URL = 'https://love2009-hub.github.io/blade-co/';
+
+  if (payOnlineBtn) {
+    payOnlineBtn.addEventListener('click', async () => {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const service = document.getElementById('service').value;
+      
+      if (!name || !phone || !service) {
+        showStatus('⚠ Заполните имя, телефон и выберите услугу для оплаты', 'error');
+        return;
+      }
+
+      // Карта цен для автоматического определения суммы (соответствует списку услуг на сайте)
+      const prices = {
+        'Классическая стрижка': '1800.00',
+        'Модельная стрижка': '2400.00',
+        'Стрижка + укладка': '2900.00',
+        'Детская (до 12 лет)': '1400.00',
+        'Моделирование бороды': '1200.00',
+        'Стрижка + борода': '2800.00',
+        'Коррекция контура': '800.00',
+        'Окрашивание бороды': '1600.00',
+        'Классическое бритьё': '1800.00',
+        'Бритьё + уход за лицом': '2400.00',
+        'Чёрная маска для лица': '700.00',
+        'Комплекс «Всё включено»': '4500.00'
+      };
+
+      const amount = prices[service] || '1000.00';
+      const description = `Запись: ${service} (${name})`;
+      const returnUrl = `${SITE_URL}#contact?payment=success`;
+
+      payOnlineBtn.disabled = true;
+      payOnlineBtn.innerHTML = 'Создание ссылки на оплату...';
+
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount, description, return_url: returnUrl })
+        });
+
+        const data = await response.json();
+
+        if (data.confirmation_url) {
+          showStatus('✓ Перенаправление на страницу оплаты ЮKassa...', 'success');
+          setTimeout(() => {
+            window.location.href = data.confirmation_url;
+          }, 1000);
+        } else {
+          throw new Error(data.error || 'Не удалось создать платеж');
+        }
+      } catch (err) {
+        showStatus('⚠ Ошибка при создании платежа. Проверьте настройки или попробуйте позже.', 'error');
+        payOnlineBtn.disabled = false;
+        payOnlineBtn.innerHTML = '💳 Оплатить онлайн <span class="chev">→</span>';
+      }
+    });
+  }
+
+  // ============ PHONE INPUT MASK (НОВОЕ) ============
+  const phoneInputField = document.getElementById('phone');
+
+  const formatPhoneValue = (value) => {
+    let cleaned = ('' + value).replace(/\D/g, '');
+    if (cleaned.length > 0 && cleaned[0] === '8') {
+      cleaned = '7' + cleaned.substring(1);
+    }
+    if (cleaned.length > 0 && cleaned[0] !== '7') {
+      cleaned = '7' + cleaned;
+    }
+    
+    let formatted = '+7';
+    if (cleaned.length > 1) {
+      formatted += ' (' + cleaned.substring(1, 4);
+    }
+    if (cleaned.length >= 5) {
+      formatted += ') ' + cleaned.substring(4, 7);
+    }
+    if (cleaned.length >= 8) {
+      formatted += '-' + cleaned.substring(7, 9);
+    }
+    if (cleaned.length >= 10) {
+      formatted += '-' + cleaned.substring(9, 11);
+    }
+    return formatted;
+  };
+
+  if (phoneInputField) {
+    phoneInputField.addEventListener('input', (e) => {
+      const input = e.target;
+      const cursorPosition = input.selectionStart;
+      const oldValue = input.value;
+      const newValue = formatPhoneValue(input.value);
+      
+      if (newValue !== oldValue) {
+        input.value = newValue;
+        // Умное позиционирование курсора
+        if (cursorPosition === oldValue.length) {
+          input.setSelectionRange(newValue.length, newValue.length);
+        } else {
+          input.setSelectionRange(cursorPosition, cursorPosition);
+        }
+      }
+    });
+
+    // Запрещаем стирать "+7"
+    phoneInputField.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && e.target.value.length <= 3) {
+        e.preventDefault();
+      }
+    });
+
+    // Автозаполнение "+7" при фокусе, если поле пустое
+    phoneInputField.addEventListener('focus', (e) => {
+      if (!e.target.value) {
+        e.target.value = '+7';
+        e.target.setSelectionRange(3, 3);
+      }
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
 </script>
+
 </body>
 </html>
+```
